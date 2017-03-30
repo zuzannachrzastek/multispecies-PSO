@@ -175,7 +175,7 @@ public abstract class RunUtils {
     }
 
 
-    private static SimulationResult run(int [] particles, FitnessFunction fitnessFunction) {
+    public static SimulationResult run(int [] particles, FitnessFunction fitnessFunction) {
         List<SwarmInformation> swarmInformations = createSwarmInfoList(particles);
 
         SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()];
