@@ -1,5 +1,6 @@
 package pl.edu.agh.mpso;
 
+import com.google.gson.Gson;
 import net.sourceforge.jswarm_pso.FitnessFunction;
 import net.sourceforge.jswarm_pso.Neighborhood;
 import net.sourceforge.jswarm_pso.Neighborhood1D;
@@ -13,8 +14,11 @@ import pl.edu.agh.mpso.swarm.MultiSwarm;
 import pl.edu.agh.mpso.swarm.SwarmInformation;
 import pl.edu.agh.mpso.transition.order.DefaultOrderFunction;
 import pl.edu.agh.mpso.transition.shift.DefaultShiftFunction;
+import pl.edu.agh.mpso.velocity.LinearVelocityFunction;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +29,7 @@ import static pl.edu.agh.mpso.Simulation.NUMBER_OF_PARTICLES;
 /**
  * Created by Zuzanna on 3/30/2017.
  */
-public class RunUtils {
+public abstract class RunUtils {
 
     public static void runParallel(final int id, final FitnessFunction fitnessFunction, final int[] speciesArray, final int executions) throws InterruptedException {
         Thread thread = new Thread(new Runnable() {
@@ -44,7 +48,41 @@ public class RunUtils {
         thread.join();
     }
 
-    private static void simulate(FitnessFunction fitnessFunction,
+    static void runParallel(final FitnessFunction fitnessFunction, final int speciesId, final int executions, final int NUMBER_OF_SPECIES) throws InterruptedException {
+        Thread thread = new Thread(new Runnable() {
+
+            private final int [] speciesShares = new int [] {0, 4, 11, 18, 25};
+
+            public void run() {
+                for(int share : speciesShares){
+                    System.out.println("Species " + speciesId + " share " + share);
+
+                    int [] speciesArray = new int[NUMBER_OF_SPECIES];
+
+                    for(int i = 0; i < NUMBER_OF_SPECIES; i++){
+                        if(i == speciesId - 1){
+                            speciesArray[i] = share;
+                        } else {
+                            speciesArray[i] = (NUMBER_OF_PARTICLES - share) / (NUMBER_OF_SPECIES - 1);
+                        }
+                    }
+
+                    for(int i = 0; i < executions; i++){
+                        try {
+                            simulate(fitnessFunction, speciesArray, speciesId, executions, i);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+
+        thread.start();
+        thread.join();
+    }
+
+    static void simulate(FitnessFunction fitnessFunction,
                                  int[] speciesArray, int id, int executions, int i) throws IOException {
         SimulationOutput output = null;
         try{
@@ -67,41 +105,83 @@ public class RunUtils {
             e.printStackTrace();
             output = new SimulationOutputError();
             ((SimulationOutputError)output).reason = e.toString() + ": " + e.getMessage();
-        } finally {
-//			Writer writer = new FileWriter("output.json");
-//			Gson gson = new Gson();
-//			gson.toJson(output, writer);
-//			writer.close();
         }
     }
 
-    private static SimulationResult run(int [] particles, FitnessFunction fitnessFunction) {
-        int cnt = 0;
+    private static List<SwarmInformation> createSwarmInfoList(int [] particles){
         List<SwarmInformation> swarmInformations = new ArrayList<SwarmInformation>();
 
         for(int i = 0; i < particles.length; i++){
             if(particles[i] != 0){
-                cnt += particles[i];
-
                 SpeciesType type = SpeciesType.values()[i];
                 SwarmInformation swarmInformation = new SwarmInformation(particles[i], type);
                 swarmInformations.add(swarmInformation);
             }
         }
 
+        return swarmInformations;
+    }
+
+    public static SimulationResult runWithCounter(int [] particles, FitnessFunction fitnessFunction, double initialVelocity, double finalVelocity, int VELOCITY_UPDATES){
+        int cnt = 0;
+        List<SwarmInformation> swarmInformations = createSwarmInfoList(particles);
+
         SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()];
         MultiSwarm multiSwarm = new MultiSwarm(swarmInformations.toArray(swarmInformationsArray), fitnessFunction);
 
-        Neighborhood neighbourhood = new Neighborhood1D(7, true);
-        multiSwarm.setNeighborhood(neighbourhood);
+        setMultiSwarmParameters(multiSwarm,cnt/5,20);
 
-        multiSwarm.setInertia(0.95);
-        multiSwarm.setNeighborhoodIncrement(0.9);
-        multiSwarm.setParticleIncrement(0.9);
-        multiSwarm.setGlobalIncrement(0.9);
+        multiSwarm.setVelocityFunction(new LinearVelocityFunction(initialVelocity, finalVelocity).setUpdatesCnt(VELOCITY_UPDATES).setUpdatesInterval(NUMBER_OF_ITERATIONS / VELOCITY_UPDATES));
+        multiSwarm.init();
 
-        multiSwarm.setMaxPosition(20);
-        multiSwarm.setMinPosition(-20);
+        List<Double> partial = new ArrayList<Double>(NUMBER_OF_ITERATIONS / 100);
+
+        for(int i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
+            // Evolve swarm
+            multiSwarm.evolve();
+
+            //display partial results
+            if(NUMBER_OF_ITERATIONS > 100 && (i % (NUMBER_OF_ITERATIONS / 100) == 0)){
+                partial.add(multiSwarm.getBestFitness());
+                System.out.println(multiSwarm.getBestFitness());
+            }
+        }
+
+        //print final results
+        System.out.println(multiSwarm.getBestFitness());
+
+        //create output.json
+        SimulationResult output = new SimulationResult();
+        output.fitnessFunction = fitnessFunction.getClass().getName();
+        output.iterations = NUMBER_OF_ITERATIONS;
+        output.dimensions = NUMBER_OF_DIMENSIONS;
+        output.partial = partial;
+        output.bestFitness = multiSwarm.getBestFitness();
+        output.totalParticles = NUMBER_OF_PARTICLES;
+
+        output.species1 = particles[0];
+        output.species2 = particles[1];
+        output.species3 = particles[2];
+        output.species4 = particles[3];
+        output.species5 = particles[4];
+        output.species6 = particles[5];
+        output.species7 = particles[6];
+        output.species8 = particles[7];
+
+        output.initialVelocity = initialVelocity;
+        output.finalVelocity = finalVelocity;
+
+        return output;
+    }
+
+
+    private static SimulationResult run(int [] particles, FitnessFunction fitnessFunction) {
+        List<SwarmInformation> swarmInformations = createSwarmInfoList(particles);
+
+        SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()];
+        MultiSwarm multiSwarm = new MultiSwarm(swarmInformations.toArray(swarmInformationsArray), fitnessFunction);
+
+        setMultiSwarmParameters(multiSwarm,7,20);
 
         multiSwarm.setOrderFunction(new DefaultOrderFunction());
         multiSwarm.setShiftFunction(new DefaultShiftFunction());
@@ -143,5 +223,51 @@ public class RunUtils {
         output.shiftFunction = multiSwarm.getShiftFunction().getClass().getSimpleName();
 
         return output;
+    }
+
+    public static MultiSwarm createSwarm(FitnessFunction fitnessFunction){
+        final int [] particleArray = new int[]{6, 0, 0, 0, 0, 0, 0, 1};
+
+        List<SwarmInformation> swarmInformations = createSwarmInfoList(particleArray);
+
+        SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()];
+        MultiSwarm multiSwarm = new MultiSwarm(swarmInformations.toArray(swarmInformationsArray), fitnessFunction);
+
+        setMultiSwarmParameters(multiSwarm, 1, 5);
+
+        multiSwarm.init();
+
+        return multiSwarm;
+    }
+
+    public static void setMultiSwarmParameters(MultiSwarm multiSwarm, int size, int searchSpaceSize){
+        Neighborhood neighbourhood = new Neighborhood1D(size, true);
+        multiSwarm.setNeighborhood(neighbourhood);
+
+        multiSwarm.setInertia(0.95);
+        multiSwarm.setNeighborhoodIncrement(0.9);
+        multiSwarm.setParticleIncrement(0.9);
+        multiSwarm.setGlobalIncrement(0.9);
+
+        multiSwarm.setMaxPosition(searchSpaceSize);
+        multiSwarm.setMinPosition(-searchSpaceSize);
+    }
+
+    public static void generateOutputFile(int [] speciesArray, FitnessFunction fitnessFunction, SimulationResult result) throws IOException {
+        SimulationOutput output = null;
+        try{
+            output = new SimulationOutputOk();
+            ((SimulationOutputOk) output).results = result;
+            SimulationResultDAO.getInstance().writeResult(result);
+            SimulationResultDAO.getInstance().close();
+        } catch (Throwable e){
+            output = new SimulationOutputError();
+            ((SimulationOutputError)output).reason = e.toString() + ": " + e.getMessage();
+        } finally {
+            Writer writer = new FileWriter("output.json");
+            Gson gson = new Gson();
+            gson.toJson(output, writer);
+            writer.close();
+        }
     }
 }

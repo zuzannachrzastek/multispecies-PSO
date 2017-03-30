@@ -52,5 +52,4 @@ public class LocalRun {
 //		runParallel(0, fitnessFunction, new int[]{5,7,6,7,0,0,0,0}, executions);
 //		runParallel(0, fitnessFunction, new int[]{0,6,5,6,1,1,1,5}, executions);
 	}
-
 }

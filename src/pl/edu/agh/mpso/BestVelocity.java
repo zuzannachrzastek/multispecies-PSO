@@ -108,24 +108,9 @@ public class BestVelocity {
 				speciesArray[i] = 0; 
 			}
 		}
-		
-		SimulationOutput output = null;
-		try{
-			SimulationResult result = run(speciesArray, fitnessFunction);
-			output = new SimulationOutputOk();
-			((SimulationOutputOk) output).results = result;
-			SimulationResultDAO.getInstance().writeResult(result);
-			SimulationResultDAO.getInstance().close();
-		} catch (Throwable e){
-			output = new SimulationOutputError();
-			((SimulationOutputError)output).reason = e.toString() + ": " + e.getMessage();
-		} finally {
-			Writer writer = new FileWriter("output.json");
-			Gson gson = new Gson();
-			gson.toJson(output, writer);
-			writer.close();
-		}
-		
+
+		SimulationResult result = RunUtils.runWithCounter(speciesArray, fitnessFunction, initialVelocity, finalVelocity, VELOCITY_UPDATES);
+		RunUtils.generateOutputFile(speciesArray, fitnessFunction, result);
 	}
 	
 	private static SimulationResult run(int [] particles, FitnessFunction fitnessFunction) {
@@ -157,26 +142,26 @@ public class BestVelocity {
 		
 		multiSwarm.setMaxPosition(MAX_POS);
 		multiSwarm.setMinPosition(-MAX_POS);
-		
+
 		multiSwarm.setVelocityFunction(new LinearVelocityFunction(initialVelocity, finalVelocity).setUpdatesCnt(VELOCITY_UPDATES).setUpdatesInterval(NUMBER_OF_ITERATIONS / VELOCITY_UPDATES));
 		multiSwarm.init();
-		
+
 		List<Double> partial = new ArrayList<Double>(NUMBER_OF_ITERATIONS / 100);
-		
+
 		for(int i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
 			// Evolve swarm
 			multiSwarm.evolve();
-			
+
 			//display partial results
 			if(NUMBER_OF_ITERATIONS > 100 && (i % (NUMBER_OF_ITERATIONS / 100) == 0)){
 				partial.add(multiSwarm.getBestFitness());
 				System.out.println(multiSwarm.getBestFitness());
 			}
 		}
-		
+
 		//print final results
 		System.out.println(multiSwarm.getBestFitness());
-		
+
 		//create output.json
 		SimulationResult output = new SimulationResult();
 		output.fitnessFunction = className;
@@ -185,7 +170,7 @@ public class BestVelocity {
 		output.partial = partial;
 		output.bestFitness = multiSwarm.getBestFitness();
 		output.totalParticles = NUMBER_OF_PARTICLES;
-		
+
 		output.species1 = particles[0];
 		output.species2 = particles[1];
 		output.species3 = particles[2];
@@ -194,10 +179,10 @@ public class BestVelocity {
 		output.species6 = particles[5];
 		output.species7 = particles[6];
 		output.species8 = particles[7];
-		
+
 		output.initialVelocity = initialVelocity;
 		output.finalVelocity = finalVelocity;
-		
+
 		return output;
 	}
 }

@@ -88,22 +88,7 @@ public class Scalarm {
 			}
 		}
 		
-		SimulationOutput output = null;
-		try{
-			SimulationResult result = run(speciesArray, fitnessFunction);
-			output = new SimulationOutputOk();
-			((SimulationOutputOk) output).results = result;
-			SimulationResultDAO.getInstance().writeResult(result);
-			SimulationResultDAO.getInstance().close();
-		} catch (Throwable e){
-			output = new SimulationOutputError();
-			((SimulationOutputError)output).reason = e.toString() + ": " + e.getMessage();
-		} finally {
-			Writer writer = new FileWriter("output.json");
-			Gson gson = new Gson();
-			gson.toJson(output, writer);
-			writer.close();
-		}
+		RunUtils.generateOutputFile(speciesArray, fitnessFunction);
 	}
 
 	private static SimulationResult run(int [] particles, FitnessFunction fitnessFunction) {
@@ -116,7 +101,6 @@ public class Scalarm {
 				
 				SpeciesType type = SpeciesType.values()[i];
 				SwarmInformation swarmInformation = new SwarmInformation(particles[i], type);
-				
 				swarmInformations.add(swarmInformation);
 			}
 		}
