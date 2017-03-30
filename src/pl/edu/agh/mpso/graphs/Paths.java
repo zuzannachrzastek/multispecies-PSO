@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import net.sourceforge.jswarm_pso.FitnessFunction;
 import net.sourceforge.jswarm_pso.Neighborhood;
 import net.sourceforge.jswarm_pso.Neighborhood1D;
+import pl.edu.agh.mpso.RunUtils;
 import pl.edu.agh.mpso.fitness.Parabola;
 import pl.edu.agh.mpso.species.SpeciesParticle;
 import pl.edu.agh.mpso.species.SpeciesType;
@@ -26,7 +27,6 @@ import pl.edu.agh.mpso.velocity.ConstantVelocityFunction;
 public class Paths {
 	private static final ConstantVelocityFunction velocityFunction = new ConstantVelocityFunction(0.001);
 	private final static FitnessFunction fitnessFunction = new Parabola();
-	private final static int [] particleArray = new int[]{6, 0, 0, 0, 0, 0, 0, 1};
 	private final static int drawnParticle = 6;
 	
 	
@@ -99,7 +99,7 @@ public class Paths {
 		final int shapeSize = 20;
 		int x, y;
 		
-		MultiSwarm swarm = createSwarm();
+		MultiSwarm swarm = RunUtils.createSwarm(fitnessFunction);
 		
 		for(int i = 0; i < NUMBER_OF_ITERATIONS; i++){
 			swarm.evolve();
@@ -126,38 +126,6 @@ public class Paths {
 		
 		System.out.println("Particles drawn");
 		System.out.println(swarm.getBestFitness());
-	}
-	
-	private static MultiSwarm createSwarm(){
-		List<SwarmInformation> swarmInformations = new ArrayList<SwarmInformation>();
-		
-		for(int i = 0; i < particleArray.length; i++){
-			if(particleArray[i] != 0){
-				SpeciesType type = SpeciesType.values()[i];
-				SwarmInformation swarmInformation = new SwarmInformation(particleArray[i], type);
-				
-				swarmInformations.add(swarmInformation);
-			}
-		}
-		
-		SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()]; 
-		MultiSwarm multiSwarm = new MultiSwarm(swarmInformations.toArray(swarmInformationsArray), fitnessFunction);
-		
-		Neighborhood neighbourhood = new Neighborhood1D(1, true);
-		multiSwarm.setNeighborhood(neighbourhood);
-		
-		multiSwarm.setNeighborhoodIncrement(0.9);
-		multiSwarm.setInertia(0.95);
-		multiSwarm.setParticleIncrement(0.9);
-		multiSwarm.setGlobalIncrement(0.9);
-		multiSwarm.setVelocityFunction(velocityFunction);
-		
-		multiSwarm.setMaxPosition(SEARCH_SPACE_SIZE);
-		multiSwarm.setMinPosition(-SEARCH_SPACE_SIZE);
-		
-		multiSwarm.init();
-		
-		return multiSwarm;
 	}
 	
 	private static int [] createColors(){
