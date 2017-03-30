@@ -25,7 +25,7 @@ import static pl.edu.agh.mpso.Simulation.NUMBER_OF_PARTICLES;
 /**
  * Created by Zuzanna on 3/30/2017.
  */
-public class RunUtils {
+public abstract class RunUtils {
 
     public static void runParallel(final int id, final FitnessFunction fitnessFunction, final int[] speciesArray, final int executions) throws InterruptedException {
         Thread thread = new Thread(new Runnable() {
@@ -44,7 +44,41 @@ public class RunUtils {
         thread.join();
     }
 
-    private static void simulate(FitnessFunction fitnessFunction,
+    static void runParallel(final FitnessFunction fitnessFunction, final int speciesId, final int executions, final int NUMBER_OF_SPECIES) throws InterruptedException {
+        Thread thread = new Thread(new Runnable() {
+
+            private final int [] speciesShares = new int [] {0, 4, 11, 18, 25};
+
+            public void run() {
+                for(int share : speciesShares){
+                    System.out.println("Species " + speciesId + " share " + share);
+
+                    int [] speciesArray = new int[NUMBER_OF_SPECIES];
+
+                    for(int i = 0; i < NUMBER_OF_SPECIES; i++){
+                        if(i == speciesId - 1){
+                            speciesArray[i] = share;
+                        } else {
+                            speciesArray[i] = (NUMBER_OF_PARTICLES - share) / (NUMBER_OF_SPECIES - 1);
+                        }
+                    }
+
+                    for(int i = 0; i < executions; i++){
+                        try {
+                            simulate(fitnessFunction, speciesArray, speciesId, executions, i);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+
+        thread.start();
+        thread.join();
+    }
+
+    static void simulate(FitnessFunction fitnessFunction,
                                  int[] speciesArray, int id, int executions, int i) throws IOException {
         SimulationOutput output = null;
         try{
@@ -67,22 +101,14 @@ public class RunUtils {
             e.printStackTrace();
             output = new SimulationOutputError();
             ((SimulationOutputError)output).reason = e.toString() + ": " + e.getMessage();
-        } finally {
-//			Writer writer = new FileWriter("output.json");
-//			Gson gson = new Gson();
-//			gson.toJson(output, writer);
-//			writer.close();
         }
     }
 
     private static SimulationResult run(int [] particles, FitnessFunction fitnessFunction) {
-        int cnt = 0;
         List<SwarmInformation> swarmInformations = new ArrayList<SwarmInformation>();
 
         for(int i = 0; i < particles.length; i++){
             if(particles[i] != 0){
-                cnt += particles[i];
-
                 SpeciesType type = SpeciesType.values()[i];
                 SwarmInformation swarmInformation = new SwarmInformation(particles[i], type);
                 swarmInformations.add(swarmInformation);
