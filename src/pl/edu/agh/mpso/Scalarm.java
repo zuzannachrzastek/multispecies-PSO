@@ -87,8 +87,9 @@ public class Scalarm {
 				speciesArray[i] = (int) (speciesShare * NUMBER_OF_PARTICLES);
 			}
 		}
-		
-		RunUtils.generateOutputFile(speciesArray, fitnessFunction);
+
+		SimulationResult result = RunUtils.run(speciesArray, fitnessFunction);
+		RunUtils.generateOutputFile(speciesArray, fitnessFunction, result);
 	}
 
 	private static SimulationResult run(int [] particles, FitnessFunction fitnessFunction) {

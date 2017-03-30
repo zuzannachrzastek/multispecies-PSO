@@ -90,7 +90,8 @@ public class SpeciesShare {
 			}
 		}
 
-		RunUtils.generateOutputFile(speciesArray, fitnessFunction);
+		SimulationResult result = RunUtils.run(speciesArray, fitnessFunction);
+		RunUtils.generateOutputFile(speciesArray, fitnessFunction, result);
 	}
 
 	private static SimulationResult run(int [] particles, FitnessFunction fitnessFunction) {
