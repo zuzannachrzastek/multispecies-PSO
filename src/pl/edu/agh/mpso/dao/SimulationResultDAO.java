@@ -21,6 +21,10 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
+import static pl.edu.agh.mpso.Simulation.NUMBER_OF_DIMENSIONS;
+import static pl.edu.agh.mpso.Simulation.NUMBER_OF_ITERATIONS;
+import static pl.edu.agh.mpso.Simulation.NUMBER_OF_PARTICLES;
+
 public class SimulationResultDAO {
 //	private static final String COLLECTION_NAME = "speciesShareFinal";
 //	private static final String COLLECTION_NAME = "speciesShareSN7";
@@ -69,30 +73,27 @@ public class SimulationResultDAO {
     	
 		while(iterator.hasNext() && limit != 0){
     		Document next = iterator.next();
-    		SimulationResult result = new SimulationResult();
-    		
-    		result.totalParticles = totalParticles;
-    		result.iterations = iterations;
-    		result.dimensions = dimensions;
-    		result.fitnessFunction = fitnessFunction;
-    		
-    		result.species1 = next.getInteger("species1");
-    		result.species2 = next.getInteger("species2");
-    		result.species3 = next.getInteger("species3");
-    		result.species4 = next.getInteger("species4");
-    		result.species5 = next.getInteger("species5");
-    		result.species6 = next.getInteger("species6");
-    		result.species7 = next.getInteger("species7");
-    		result.species8 = next.getInteger("species8");
-    		result.bestFitness = next.getDouble("bestFitness");
-    		
-    		result.orderFunction = next.getString("orderFunction");
-    		result.shiftFunction = next.getString("shiftFunction");
-    		
+            SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();
+            SimulationResult result = builder.setFitnessFunction(fitnessFunction)
+                    .setIterations(iterations)
+                    .setDimensions(dimensions)
+                    .setPartial((List<Double>) next.get("partial"))
+                    .setBestFitness(next.getDouble("bestFitness"))
+                    .setTotalParticles(totalParticles)
+                    .setSpecies1(next.getInteger("species1"))
+                    .setSpecies2(next.getInteger("species2"))
+                    .setSpecies3(next.getInteger("species3"))
+                    .setSpecies4(next.getInteger("species4"))
+                    .setSpecies5(next.getInteger("species5"))
+                    .setSpecies6(next.getInteger("species6"))
+                    .setSpecies7(next.getInteger("species7"))
+                    .setSpecies8(next.getInteger("species8"))
+                    .setOrderFunction(next.getString("orderFunction"))
+                    .setShiftFunction(next.getString("shiftFunction"))
+                    .build();
+
+
     		//TODO - best velocity
-    		
-			List<Double> partial = (List<Double>) next.get("partial");
-    		result.partial = partial;
     		
     		results.add(result);
     		limit--;

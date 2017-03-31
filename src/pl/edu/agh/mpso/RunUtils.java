@@ -27,11 +27,11 @@ import static pl.edu.agh.mpso.Simulation.NUMBER_OF_PARTICLES;
  */
 public class RunUtils {
 
-    public static void runParallel(final int id, final FitnessFunction fitnessFunction, final int[] speciesArray, final int executions) throws InterruptedException {
+    public static void runParallel(final int id, final FitnessFunction fitnessFunction, final List<SwarmInformation> speciesArray, final int executions) throws InterruptedException {
         Thread thread = new Thread(new Runnable() {
 
             public void run() {
-                for(int i = 0; i < executions; i++){
+                for (int i = 0; i < executions; i++) {
                     try {
                         simulate(fitnessFunction, speciesArray, id, executions, i);
                     } catch (Throwable e) {
@@ -45,28 +45,27 @@ public class RunUtils {
     }
 
     private static void simulate(FitnessFunction fitnessFunction,
-                                 int[] speciesArray, int id, int executions, int i) throws IOException {
+                                 List<SwarmInformation> swarmInformations, int id, int executions, int i) throws IOException {
         SimulationOutput output = null;
-        try{
+        try {
             long tic = System.currentTimeMillis();
-            SimulationResult result = run(speciesArray, fitnessFunction);
+            SimulationResult result = run(swarmInformations, fitnessFunction);
             long toc = System.currentTimeMillis();
             long diff = toc - tic;
             long seconds = diff / 1000L;
             long minutes = seconds / 60L;
             long hours = minutes / 60L;
-            System.out.println("" + id + ": Execution " + (i+1) + " of " + executions);
-            System.out.println("\tDone in: " + hours + " hours " + (minutes%60) + " minutes " + (seconds % 60) + " seconds");
+            System.out.println("" + id + ": Execution " + (i + 1) + " of " + executions);
+            System.out.println("\tDone in: " + hours + " hours " + (minutes % 60) + " minutes " + (seconds % 60) + " seconds");
 
-            output = new SimulationOutputOk();
-            ((SimulationOutputOk) output).results = result;
+            //TODO delete output..?
+            output = new SimulationOutputOk(result);
             SimulationResultDAO.getInstance().writeResult(result);
             SimulationResultDAO.getInstance().close();
-            System.out.println(result.bestFitness);
-        } catch (Throwable e){
+            System.out.println(result.getBestFitness());
+        } catch (Throwable e) {
             e.printStackTrace();
-            output = new SimulationOutputError();
-            ((SimulationOutputError)output).reason = e.toString() + ": " + e.getMessage();
+            output = new SimulationOutputError(e.toString() + ": " + e.getMessage());
         } finally {
 //			Writer writer = new FileWriter("output.json");
 //			Gson gson = new Gson();
@@ -75,22 +74,8 @@ public class RunUtils {
         }
     }
 
-    private static SimulationResult run(int [] particles, FitnessFunction fitnessFunction) {
-        int cnt = 0;
-        List<SwarmInformation> swarmInformations = new ArrayList<SwarmInformation>();
-
-        for(int i = 0; i < particles.length; i++){
-            if(particles[i] != 0){
-                cnt += particles[i];
-
-                SpeciesType type = SpeciesType.values()[i];
-                SwarmInformation swarmInformation = new SwarmInformation(particles[i], type);
-                swarmInformations.add(swarmInformation);
-            }
-        }
-
-        SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()];
-        MultiSwarm multiSwarm = new MultiSwarm(swarmInformations.toArray(swarmInformationsArray), fitnessFunction);
+    private static SimulationResult run(List<SwarmInformation> swarmInformations, FitnessFunction fitnessFunction) {
+        MultiSwarm multiSwarm = new MultiSwarm(swarmInformations, fitnessFunction);
 
         Neighborhood neighbourhood = new Neighborhood1D(7, true);
         multiSwarm.setNeighborhood(neighbourhood);
@@ -111,37 +96,34 @@ public class RunUtils {
 
         List<Double> partial = new ArrayList<Double>(NUMBER_OF_ITERATIONS / 100);
 
-        for(int i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
+        for (int i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
             // Evolve swarm
             multiSwarm.evolve();
 
             //display partial results
-            if(NUMBER_OF_ITERATIONS > 100 && (i % (NUMBER_OF_ITERATIONS / 100) == 0)){
+            if (NUMBER_OF_ITERATIONS > 100 && (i % (NUMBER_OF_ITERATIONS / 100) == 0)) {
                 partial.add(multiSwarm.getBestFitness());
             }
         }
 
         //create output.json
-        SimulationResult output = new SimulationResult();
-        output.fitnessFunction = fitnessFunction.getClass().getName();
-        output.iterations = NUMBER_OF_ITERATIONS;
-        output.dimensions = NUMBER_OF_DIMENSIONS;
-        output.partial = partial;
-        output.bestFitness = multiSwarm.getBestFitness();
-        output.totalParticles = NUMBER_OF_PARTICLES;
-
-        output.species1 = particles[0];
-        output.species2 = particles[1];
-        output.species3 = particles[2];
-        output.species4 = particles[3];
-        output.species5 = particles[4];
-        output.species6 = particles[5];
-        output.species7 = particles[6];
-        output.species8 = particles[7];
-
-        output.orderFunction = multiSwarm.getOrderFunction().getClass().getSimpleName();
-        output.shiftFunction = multiSwarm.getShiftFunction().getClass().getSimpleName();
-
-        return output;
+        SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();
+        return builder.setFitnessFunction(fitnessFunction.getClass().getName())
+                .setIterations(NUMBER_OF_ITERATIONS)
+                .setDimensions(NUMBER_OF_DIMENSIONS)
+                .setPartial(partial)
+                .setBestFitness(multiSwarm.getBestFitness())
+                .setTotalParticles(NUMBER_OF_PARTICLES)
+                .setSpecies1(swarmInformations.get(0).getNumberOfParticles())
+                .setSpecies2(swarmInformations.get(1).getNumberOfParticles())
+                .setSpecies3(swarmInformations.get(2).getNumberOfParticles())
+                .setSpecies4(swarmInformations.get(3).getNumberOfParticles())
+                .setSpecies5(swarmInformations.get(4).getNumberOfParticles())
+                .setSpecies6(swarmInformations.get(5).getNumberOfParticles())
+                .setSpecies7(swarmInformations.get(6).getNumberOfParticles())
+                .setSpecies8(swarmInformations.get(7).getNumberOfParticles())
+                .setOrderFunction(multiSwarm.getOrderFunction().getClass().getSimpleName())
+                .setShiftFunction(multiSwarm.getShiftFunction().getClass().getSimpleName())
+                .build();
     }
 }

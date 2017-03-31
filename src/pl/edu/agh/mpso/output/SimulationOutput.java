@@ -1,5 +1,6 @@
 package pl.edu.agh.mpso.output;
 
-public class SimulationOutput {
-//	public String status;
+//TODO WTF!!!
+public interface SimulationOutput {
+    String getStatus();
 }

@@ -4,6 +4,8 @@ import net.sourceforge.jswarm_pso.Particle;
 import pl.edu.agh.mpso.species.SpeciesType;
 import pl.edu.agh.mpso.swarm.SwarmInformation;
 
+import java.util.List;
+
 public class DefaultShiftFunction extends ShiftFunction{
 	
 	public DefaultShiftFunction(){
@@ -11,7 +13,7 @@ public class DefaultShiftFunction extends ShiftFunction{
 	}
 
 	@Override
-	public void shift(SwarmInformation [] swarmInformations, SpeciesType [] order){
+	public void shift(List<SwarmInformation> swarmInformations, SpeciesType [] order){
 		//do nothing
 	}
 

@@ -13,6 +13,7 @@ import pl.edu.agh.mpso.chart.ScatterChart;
 import pl.edu.agh.mpso.dao.SimulationResultDAO;
 import pl.edu.agh.mpso.output.SimulationResult;
 
+//TODO duplications: DifferentConfigurations.java
 public class Distribution {
     private static final String FITNESS_FUNCTION = "Rastrigin";
     private static final String PACKAGE = "pl.edu.agh.miss.fitness";
@@ -89,7 +90,7 @@ public class Distribution {
     	for (SimulationResult simulationResult : filteredResults) {
     		final int[] speciesCount = getSpeciesConfiguration(simulationResult);
     		if (Arrays.equals(configuration, speciesCount)) {
-    			result.add(simulationResult.bestFitness);
+    			result.add(simulationResult.getBestFitness());
     		}
         }
     	
@@ -107,8 +108,8 @@ public class Distribution {
     }
 
     private static int[] getSpeciesConfiguration(SimulationResult result) {
-        return new int[]{ result.species1, result.species2, result.species3,
-                                     result.species4, result.species5, result.species6,
-                                     result.species7, result.species8};
-    }    
+        return new int[]{ result.getSpecies1(), result.getSpecies2(), result.getSpecies3(),
+                result.getSpecies4(), result.getSpecies5(), result.getSpecies6(),
+                result.getSpecies7(), result.getSpecies8()};
+    }
 }

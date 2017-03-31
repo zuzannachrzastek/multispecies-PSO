@@ -29,6 +29,10 @@ public class SwarmInformation {
 	public SwarmInformation(int numberOfParticles, SpeciesType type){
 		this(numberOfParticles, new SpeciesParticle(type, Simulation.NUMBER_OF_DIMENSIONS));
 	}
+
+	public SwarmInformation(SpeciesType type){
+		this(1, new SpeciesParticle(type, Simulation.NUMBER_OF_DIMENSIONS));
+	}
 	
 	public SwarmInformation(int numberOfParticles, SpeciesType type, int dimensions){
 		this(numberOfParticles, new SpeciesParticle(type, dimensions));
