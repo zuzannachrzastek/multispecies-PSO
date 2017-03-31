@@ -1,4 +1,4 @@
-package pl.edu.agh.mpso;
+package pl.edu.agh.mpso.utils;
 
 import com.google.gson.Gson;
 import net.sourceforge.jswarm_pso.FitnessFunction;
