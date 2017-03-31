@@ -122,6 +122,38 @@ public class Paths {
 		System.out.println(swarm.getBestFitness());
 	}
 	
+	private static MultiSwarm createSwarm(){
+		List<SwarmInformation> swarmInformations = new ArrayList<SwarmInformation>();
+		
+		for(int i = 0; i < particleArray.length; i++){
+			if(particleArray[i] != 0){
+				SpeciesType type = SpeciesType.values()[i];
+				SwarmInformation swarmInformation = new SwarmInformation(particleArray[i], type);
+				
+				swarmInformations.add(swarmInformation);
+			}
+		}
+		
+		SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()]; 
+		MultiSwarm multiSwarm = new MultiSwarm(swarmInformations, fitnessFunction);
+		
+		Neighborhood neighbourhood = new Neighborhood1D(1, true);
+		multiSwarm.setNeighborhood(neighbourhood);
+		
+		multiSwarm.setNeighborhoodIncrement(0.9);
+		multiSwarm.setInertia(0.95);
+		multiSwarm.setParticleIncrement(0.9);
+		multiSwarm.setGlobalIncrement(0.9);
+		multiSwarm.setVelocityFunction(velocityFunction);
+		
+		multiSwarm.setMaxPosition(SEARCH_SPACE_SIZE);
+		multiSwarm.setMinPosition(-SEARCH_SPACE_SIZE);
+		
+		multiSwarm.init();
+		
+		return multiSwarm;
+	}
+	
 	private static int [] createColors(){
 		int r = 0, g = 0, b = 255;
 		int index = 0;

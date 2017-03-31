@@ -18,7 +18,7 @@ public class LocalRunSpeciesShare{
 		NUMBER_OF_DIMENSIONS = 100;
 		NUMBER_OF_ITERATIONS = 3000;
 		int executions = 30;
-		
+
 		for(int species = 1; species <= NUMBER_OF_SPECIES; species++){
 			RunUtils.runParallel(fitnessFunction, species, executions, NUMBER_OF_SPECIES);
 		}

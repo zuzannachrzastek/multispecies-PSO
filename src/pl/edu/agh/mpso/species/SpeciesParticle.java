@@ -21,7 +21,7 @@ public class SpeciesParticle extends Particle {
 		this.type = type;
 	}
 	
-	
+	//TODO why?
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SpeciesParticle selfFactory(SpeciesType type) {
 		Class cl = this.getClass();

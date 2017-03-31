@@ -20,7 +20,7 @@ import pl.edu.agh.mpso.swarm.SwarmInformation;
 import pl.edu.agh.mpso.utils.RunUtils;
 
 /**
- * 
+ *
  * @author iwanb
  * command line args:
  * - function name - must be the same as class from pl.edu.agh.miss.fitness
@@ -52,7 +52,7 @@ public class Scalarm {
 		} finally {
 			fitnessFunction = fitnessFunctionClass.newInstance();
 		}
-		
+
 		//get number of dimensions
 		if(args.length >= 2){
 			NUMBER_OF_DIMENSIONS = Integer.valueOf(args[1]);
@@ -63,16 +63,16 @@ public class Scalarm {
 			NUMBER_OF_ITERATIONS = Integer.valueOf(args[2]);
 			if(NUMBER_OF_ITERATIONS <= 0) NUMBER_OF_ITERATIONS = 1000;
 		}
-		
+
 		//create array of species share
 		int numberOfSpecies = SpeciesType.values().length;
 		int [] speciesArray = new int[numberOfSpecies];
 		int argsSum = 0;
-		
+
 		for(int i = 3; i < Math.min(numberOfSpecies + 3, args.length); i++){
 			argsSum += Integer.valueOf(args[i]);
 		}
-		
+
 		if(argsSum == 0){
 			speciesArray[0] = NUMBER_OF_PARTICLES;
 		} else {
@@ -89,11 +89,11 @@ public class Scalarm {
 	private static SimulationResult run(int [] particles, FitnessFunction fitnessFunction) {
 		int cnt = 0;
 		List<SwarmInformation> swarmInformations = new ArrayList<SwarmInformation>();
-		
+
 		for(int i = 0; i < particles.length; i++){
 			if(particles[i] != 0){
 				cnt += particles[i];
-				
+
 				SpeciesType type = SpeciesType.values()[i];
 				SwarmInformation swarmInformation = new SwarmInformation(particles[i], type);
 				swarmInformations.add(swarmInformation);

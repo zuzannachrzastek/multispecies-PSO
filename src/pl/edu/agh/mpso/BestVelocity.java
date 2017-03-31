@@ -20,7 +20,7 @@ import pl.edu.agh.mpso.utils.RunUtils;
 import pl.edu.agh.mpso.velocity.LinearVelocityFunction;
 
 /**
- * 
+ *
  * @author iwanb
  * command line args:
  * - function name - must be the same as class from pl.edu.agh.miss.fitness
@@ -38,10 +38,10 @@ public class BestVelocity {
 	private static int numberOfSpecies = SpeciesType.values().length;
 	private static double initialVelocity = 0.2;
 	private static double finalVelocity = 2.5;
-	
+
 	private static int MAX_POS = 20;
 	private static int VELOCITY_UPDATES = 100;
-	
+
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, IOException {
 		//get optimization problem
@@ -56,7 +56,7 @@ public class BestVelocity {
 		} finally {
 			fitnessFunction = fitnessFunctionClass.newInstance();
 		}
-		
+
 		//get number of dimensions
 		if(args.length >= 2){
 			NUMBER_OF_DIMENSIONS = Integer.valueOf(args[1]);
@@ -73,66 +73,66 @@ public class BestVelocity {
 			if(speciesId <= 0) speciesId = 1;
 			if(speciesId > numberOfSpecies) speciesId = 1;
 		}
-		
+
 		//get species cnt
 		if(args.length >= 5){
 			speciesCnt = Integer.valueOf(args[4]);
 			if(speciesCnt < 0) speciesCnt = NUMBER_OF_PARTICLES;
 			if(speciesCnt > NUMBER_OF_PARTICLES) speciesCnt = NUMBER_OF_PARTICLES;
 		}
-		
+
 		//get initial velocity
 		if(args.length >= 6){
 			initialVelocity = Double.valueOf(args[5]);
 		}
-		
+
 		//get final velocity
 		if(args.length >= 7){
 			finalVelocity = Double.valueOf(args[6]);
 		}
-		
+
 		//create array of species share
 		int [] speciesArray = new int[numberOfSpecies];
-				
+
 		for(int i = 0; i < numberOfSpecies; i++){
 			if(i == speciesId - 1){
 				speciesArray[i] = speciesCnt;
 			} else {
-				speciesArray[i] = 0; 
+				speciesArray[i] = 0;
 			}
 		}
 
 		SimulationResult result = RunUtils.runWithCounter(speciesArray, fitnessFunction, initialVelocity, finalVelocity, VELOCITY_UPDATES);
 		RunUtils.generateOutputFile(speciesArray, fitnessFunction, result);
 	}
-	
+
 	private static SimulationResult run(int [] particles, FitnessFunction fitnessFunction) {
 		int cnt = 0;
 		List<SwarmInformation> swarmInformations = new ArrayList<SwarmInformation>();
-		
+
 		for(int i = 0; i < particles.length; i++){
 			if(particles[i] != 0){
 				cnt += particles[i];
-				
+
 				SpeciesType type = SpeciesType.values()[i];
 				SwarmInformation swarmInformation = new SwarmInformation(particles[i], type);
-				
+
 				swarmInformations.add(swarmInformation);
 			}
 		}
-		
-		SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()]; 
+
+		SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()];
 		MultiSwarm multiSwarm = new MultiSwarm(swarmInformations.toArray(swarmInformationsArray), fitnessFunction);
-		
+
 		Neighborhood neighbourhood = new Neighborhood1D(cnt / 5, true);
 		multiSwarm.setNeighborhood(neighbourhood);
-		
-		
+
+
 		multiSwarm.setNeighborhoodIncrement(0.9);
 		multiSwarm.setInertia(0.95);
 		multiSwarm.setParticleIncrement(0.9);
 		multiSwarm.setGlobalIncrement(0.9);
-		
+
 		multiSwarm.setMaxPosition(MAX_POS);
 		multiSwarm.setMinPosition(-MAX_POS);
 

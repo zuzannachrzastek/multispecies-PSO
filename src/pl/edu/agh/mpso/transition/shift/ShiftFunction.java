@@ -17,48 +17,48 @@ public abstract class ShiftFunction {
 	private int shiftRange = 2;
 
 	protected abstract Particle selectParticle(SwarmInformation swarmInfo);
-	
-	public void shift(SwarmInformation [] swarmInformations, SpeciesType [] order){
+
+	public void shift(List<SwarmInformation> swarmInformations, SpeciesType [] order){
 		//sort swarm information with a given order & find swarms with more than 0 particles
-		List<SwarmInformation> sorted = new ArrayList<SwarmInformation>(swarmInformations.length);
-		List<SwarmInformation> notEmpty = new ArrayList<SwarmInformation>(swarmInformations.length);
-		Map<SpeciesType, SwarmInformation> sortingMap = new HashMap<SpeciesType, SwarmInformation>(swarmInformations.length);
+		List<SwarmInformation> sorted = new ArrayList<SwarmInformation>(swarmInformations.size());
+		List<SwarmInformation> notEmpty = new ArrayList<SwarmInformation>(swarmInformations.size());
+		Map<SpeciesType, SwarmInformation> sortingMap = new HashMap<SpeciesType, SwarmInformation>(swarmInformations.size());
 		Random random = new Random();
-		
+
 		for(SwarmInformation swarmInfo : swarmInformations){
 			sortingMap.put(swarmInfo.getType(), swarmInfo);
 			if(swarmInfo.getNumberOfParticles() > 0){
 				notEmpty.add(swarmInfo);
 			}
 		}
-		
+
 		for(SpeciesType type : order){
 			sorted.add(sortingMap.get(type));
 		}
-		
+
 		//remove first species from notEmpty - it cannot be shifted to a better one
 		notEmpty.remove(sorted.get(0));
-		
+
 		for(int i = 0; i < shiftCnt && !notEmpty.isEmpty(); i++){
 			//select random source swarm info
 			int fromIndex = random.nextInt(notEmpty.size());
 			SwarmInformation from = notEmpty.get(fromIndex);
-			
+
 			if(from.getParticles().size() == 0){
 				System.out.println(from);
 			}
-			
+
 			//select random destination swarm info - a better one than source
 			int toIndex = Math.max(0, sorted.indexOf(from) - 1 - random.nextInt(shiftRange));
 			SwarmInformation to = sorted.get(toIndex);
-			
+
 			if(to == null){
 				return;
 			}
-			
+
 			//perform shift
 			doShift(selectParticle(from), from, to);
-			
+
 			//update notEmpty
 			if(from.getNumberOfParticles() == 0){
 				notEmpty.remove(from);
@@ -68,24 +68,24 @@ public abstract class ShiftFunction {
 			}
 		}
 	}
-	
-	
+
+
 	public ShiftFunction setUpdatesInterval(int updatesInterval) {
 		this.updatesInterval = updatesInterval;
 		return this;
 	}
-	
+
 	public int getUpdatesInterval() {
 		return updatesInterval;
 	}
-	
+
 	protected void doShift(Particle particle, SwarmInformation from, SwarmInformation to){
 		System.out.println("\tShift: " + from.getType() + " -> " + to.getType());
 
 		((SpeciesParticle) particle).setType(to.getType());
 		from.removeParticle(particle);
 		to.addParticle(particle);
-		
+
 	}
 
 	public int getShiftCnt() {

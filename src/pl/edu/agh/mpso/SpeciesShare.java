@@ -104,7 +104,7 @@ public class SpeciesShare {
 		}
 		
 		SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()]; 
-		MultiSwarm multiSwarm = new MultiSwarm(swarmInformations.toArray(swarmInformationsArray), fitnessFunction);
+		MultiSwarm multiSwarm = new MultiSwarm(swarmInformations, fitnessFunction);
 		
 		Neighborhood neighbourhood = new Neighborhood1D(cnt / 5, true);
 		multiSwarm.setNeighborhood(neighbourhood);
@@ -138,23 +138,23 @@ public class SpeciesShare {
 		System.out.println(multiSwarm.getBestFitness());
 		
 		//create output.json
-		SimulationResult output = new SimulationResult();
-		output.fitnessFunction = className;
-		output.iterations = NUMBER_OF_ITERATIONS;
-		output.dimensions = NUMBER_OF_DIMENSIONS;
-		output.partial = partial;
-		output.bestFitness = multiSwarm.getBestFitness();
-		output.totalParticles = NUMBER_OF_PARTICLES;
-		
-		output.species1 = particles[0];
-		output.species2 = particles[1];
-		output.species3 = particles[2];
-		output.species4 = particles[3];
-		output.species5 = particles[4];
-		output.species6 = particles[5];
-		output.species7 = particles[6];
-		output.species8 = particles[7];
-		
-		return output;
+		SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();
+		return builder.setFitnessFunction(fitnessFunction.getClass().getName())
+				.setIterations(NUMBER_OF_ITERATIONS)
+				.setDimensions(NUMBER_OF_DIMENSIONS)
+				.setPartial(partial)
+				.setBestFitness(multiSwarm.getBestFitness())
+				.setTotalParticles(NUMBER_OF_PARTICLES)
+				.setSpecies1(swarmInformations.get(0).getNumberOfParticles())
+				.setSpecies2(swarmInformations.get(1).getNumberOfParticles())
+				.setSpecies3(swarmInformations.get(2).getNumberOfParticles())
+				.setSpecies4(swarmInformations.get(3).getNumberOfParticles())
+				.setSpecies5(swarmInformations.get(4).getNumberOfParticles())
+				.setSpecies6(swarmInformations.get(5).getNumberOfParticles())
+				.setSpecies7(swarmInformations.get(6).getNumberOfParticles())
+				.setSpecies8(swarmInformations.get(7).getNumberOfParticles())
+				.setOrderFunction(multiSwarm.getOrderFunction().getClass().getSimpleName())
+				.setShiftFunction(multiSwarm.getShiftFunction().getClass().getSimpleName())
+				.build();
 	}
 }

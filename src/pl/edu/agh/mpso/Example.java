@@ -10,6 +10,9 @@ import pl.edu.agh.mpso.swarm.SwarmInformation;
 import pl.edu.agh.mpso.transition.order.BestLocalOrder;
 import pl.edu.agh.mpso.transition.shift.RandomShift;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Example {
 
 	public static void main(String[] args) {
@@ -17,10 +20,10 @@ public class Example {
 		
 		FitnessFunction fitnessFunction = new Rastrigin();
 		
-		SwarmInformation [] swarmInfos = new SwarmInformation[3];
-		swarmInfos[0] = new SwarmInformation(10, SpeciesType.ALL);
-		swarmInfos[1] = new SwarmInformation(5, SpeciesType.GLOBAL_AND_LOCAL);
-		swarmInfos[2] = new SwarmInformation(5, SpeciesType.RANDOM);
+		List<SwarmInformation> swarmInfos = new ArrayList<>();
+		swarmInfos.add(new SwarmInformation(10, SpeciesType.ALL));
+		swarmInfos.add(new SwarmInformation(5, SpeciesType.GLOBAL_AND_LOCAL));
+		swarmInfos.add(new SwarmInformation(5, SpeciesType.RANDOM));
 		
 		MultiSwarm swarm = new MultiSwarm(swarmInfos, fitnessFunction);
 		

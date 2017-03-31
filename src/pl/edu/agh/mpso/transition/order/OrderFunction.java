@@ -6,12 +6,12 @@ import pl.edu.agh.mpso.species.SpeciesType;
 public abstract class OrderFunction {
 	protected SpeciesType [] order;
 	protected int updatesInterval = 100;
-	
+
 	public OrderFunction(){
 		order = new SpeciesType [SpeciesType.values().length];
 		System.arraycopy(SpeciesType.values(), 0, order, 0, SpeciesType.values().length);
 	}
-	
+
 	public abstract void calculate(SpeciesParticle [] particles);
 
 	public SpeciesType [] getOrder() {
@@ -22,7 +22,7 @@ public abstract class OrderFunction {
 		this.updatesInterval = updatesInterval;
 		return this;
 	}
-	
+
 	public int getUpdatesInterval() {
 		return updatesInterval;
 	}
