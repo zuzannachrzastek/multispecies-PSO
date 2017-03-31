@@ -1,4 +1,4 @@
-package pl.edu.agh.mpso;
+package pl.edu.agh.mpso.utils;
 
 import com.google.gson.Gson;
 import net.sourceforge.jswarm_pso.FitnessFunction;
@@ -108,28 +108,14 @@ public abstract class RunUtils {
         }
     }
 
-    private static List<SwarmInformation> createSwarmInfoList(int [] particles){
-        List<SwarmInformation> swarmInformations = new ArrayList<SwarmInformation>();
-
-        for(int i = 0; i < particles.length; i++){
-            if(particles[i] != 0){
-                SpeciesType type = SpeciesType.values()[i];
-                SwarmInformation swarmInformation = new SwarmInformation(particles[i], type);
-                swarmInformations.add(swarmInformation);
-            }
-        }
-
-        return swarmInformations;
-    }
-
     public static SimulationResult runWithCounter(int [] particles, FitnessFunction fitnessFunction, double initialVelocity, double finalVelocity, int VELOCITY_UPDATES){
         int cnt = 0;
-        List<SwarmInformation> swarmInformations = createSwarmInfoList(particles);
+        List<SwarmInformation> swarmInformations = SwarmUtils.createSwarmInfoList(particles);
 
         SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()];
         MultiSwarm multiSwarm = new MultiSwarm(swarmInformations.toArray(swarmInformationsArray), fitnessFunction);
 
-        setMultiSwarmParameters(multiSwarm,cnt/5,20);
+        SwarmUtils.setMultiSwarmParameters(multiSwarm,cnt/5,20);
 
         multiSwarm.setVelocityFunction(new LinearVelocityFunction(initialVelocity, finalVelocity).setUpdatesCnt(VELOCITY_UPDATES).setUpdatesInterval(NUMBER_OF_ITERATIONS / VELOCITY_UPDATES));
         multiSwarm.init();
@@ -176,12 +162,12 @@ public abstract class RunUtils {
 
 
     public static SimulationResult run(int [] particles, FitnessFunction fitnessFunction) {
-        List<SwarmInformation> swarmInformations = createSwarmInfoList(particles);
+        List<SwarmInformation> swarmInformations = SwarmUtils.createSwarmInfoList(particles);
 
         SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()];
         MultiSwarm multiSwarm = new MultiSwarm(swarmInformations.toArray(swarmInformationsArray), fitnessFunction);
 
-        setMultiSwarmParameters(multiSwarm,7,20);
+        SwarmUtils.setMultiSwarmParameters(multiSwarm,7,20);
 
         multiSwarm.setOrderFunction(new DefaultOrderFunction());
         multiSwarm.setShiftFunction(new DefaultShiftFunction());
@@ -223,34 +209,6 @@ public abstract class RunUtils {
         output.shiftFunction = multiSwarm.getShiftFunction().getClass().getSimpleName();
 
         return output;
-    }
-
-    public static MultiSwarm createSwarm(FitnessFunction fitnessFunction){
-        final int [] particleArray = new int[]{6, 0, 0, 0, 0, 0, 0, 1};
-
-        List<SwarmInformation> swarmInformations = createSwarmInfoList(particleArray);
-
-        SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()];
-        MultiSwarm multiSwarm = new MultiSwarm(swarmInformations.toArray(swarmInformationsArray), fitnessFunction);
-
-        setMultiSwarmParameters(multiSwarm, 1, 5);
-
-        multiSwarm.init();
-
-        return multiSwarm;
-    }
-
-    public static void setMultiSwarmParameters(MultiSwarm multiSwarm, int size, int searchSpaceSize){
-        Neighborhood neighbourhood = new Neighborhood1D(size, true);
-        multiSwarm.setNeighborhood(neighbourhood);
-
-        multiSwarm.setInertia(0.95);
-        multiSwarm.setNeighborhoodIncrement(0.9);
-        multiSwarm.setParticleIncrement(0.9);
-        multiSwarm.setGlobalIncrement(0.9);
-
-        multiSwarm.setMaxPosition(searchSpaceSize);
-        multiSwarm.setMinPosition(-searchSpaceSize);
     }
 
     public static void generateOutputFile(int [] speciesArray, FitnessFunction fitnessFunction, SimulationResult result) throws IOException {

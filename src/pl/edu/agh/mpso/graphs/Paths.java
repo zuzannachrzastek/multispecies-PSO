@@ -8,20 +8,14 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import net.sourceforge.jswarm_pso.FitnessFunction;
-import net.sourceforge.jswarm_pso.Neighborhood;
-import net.sourceforge.jswarm_pso.Neighborhood1D;
-import pl.edu.agh.mpso.RunUtils;
+import pl.edu.agh.mpso.utils.RunUtils;
 import pl.edu.agh.mpso.fitness.Parabola;
 import pl.edu.agh.mpso.species.SpeciesParticle;
-import pl.edu.agh.mpso.species.SpeciesType;
 import pl.edu.agh.mpso.swarm.MultiSwarm;
-import pl.edu.agh.mpso.swarm.SwarmInformation;
 import pl.edu.agh.mpso.velocity.ConstantVelocityFunction;
 
 public class Paths {
