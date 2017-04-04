@@ -82,8 +82,7 @@ public class FindBestMaxVelocity {
 			}
 		}
 		
-		SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()]; 
-		MultiSwarm multiSwarm = new MultiSwarm(swarmInformations.toArray(swarmInformationsArray), fitnessFunction);
+		MultiSwarm multiSwarm = new MultiSwarm(swarmInformations, fitnessFunction);
 		
 		Neighborhood neighbourhood = new Neighborhood1D(cnt / 5, true);
 		multiSwarm.setNeighborhood(neighbourhood);

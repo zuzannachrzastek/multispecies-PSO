@@ -20,6 +20,11 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import pl.edu.agh.mpso.swarm.SwarmInformation;
+
+import static pl.edu.agh.mpso.Simulation.NUMBER_OF_DIMENSIONS;
+import static pl.edu.agh.mpso.Simulation.NUMBER_OF_ITERATIONS;
+import static pl.edu.agh.mpso.Simulation.NUMBER_OF_PARTICLES;
 
 public class SimulationResultDAO {
 //	private static final String COLLECTION_NAME = "speciesShareFinal";
@@ -29,9 +34,9 @@ public class SimulationResultDAO {
 	
 	private static final String DB_PROPERTIES_FILE = "db.properties";
 
-    private static final String DB_URI = "db_uri";
+    private static final String DB_URI = "mongodb://localhost:27017";
 
-    private static final String DB_NAME = "db_name";
+    private static final String DB_NAME = "multispecies-pso";
 
     private static SimulationResultDAO simulationResultDAO;
 
@@ -69,30 +74,21 @@ public class SimulationResultDAO {
     	
 		while(iterator.hasNext() && limit != 0){
     		Document next = iterator.next();
-    		SimulationResult result = new SimulationResult();
-    		
-    		result.totalParticles = totalParticles;
-    		result.iterations = iterations;
-    		result.dimensions = dimensions;
-    		result.fitnessFunction = fitnessFunction;
-    		
-    		result.species1 = next.getInteger("species1");
-    		result.species2 = next.getInteger("species2");
-    		result.species3 = next.getInteger("species3");
-    		result.species4 = next.getInteger("species4");
-    		result.species5 = next.getInteger("species5");
-    		result.species6 = next.getInteger("species6");
-    		result.species7 = next.getInteger("species7");
-    		result.species8 = next.getInteger("species8");
-    		result.bestFitness = next.getDouble("bestFitness");
-    		
-    		result.orderFunction = next.getString("orderFunction");
-    		result.shiftFunction = next.getString("shiftFunction");
-    		
+            //TODO check if works
+            SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();
+            SimulationResult result = builder.setFitnessFunction(fitnessFunction)
+                    .setIterations(iterations)
+                    .setDimensions(dimensions)
+                    .setPartial((List<Double>) next.get("partial"))
+                    .setBestFitness(next.getDouble("bestFitness"))
+                    .setTotalParticles(totalParticles)
+                    .setSwarmInformations((List<SwarmInfoEntity>) next.get("swarmInformations"))
+                    .setOrderFunction(next.getString("orderFunction"))
+                    .setShiftFunction(next.getString("shiftFunction"))
+                    .build();
+
+
     		//TODO - best velocity
-    		
-			List<Double> partial = (List<Double>) next.get("partial");
-    		result.partial = partial;
     		
     		results.add(result);
     		limit--;
@@ -117,15 +113,16 @@ public class SimulationResultDAO {
 
     private static SimulationResultDAO createSimulationResultDAO() throws IOException {
         Properties props = new Properties();
-        InputStream input = SimulationResultDAO.class.getResourceAsStream("/" + DB_PROPERTIES_FILE);
+//        InputStream input = SimulationResultDAO.class.getResourceAsStream("/" + DB_PROPERTIES_FILE);
 
-        props.load(input);
+//        props.load(input);
 
         String dbUri = props.getProperty(DB_URI);
         String dbName = props.getProperty(DB_NAME);
 
-        MongoClient mongoClient = new MongoClient(new MongoClientURI(dbUri));
-        MongoDatabase mongoDatabase = mongoClient.getDatabase(dbName);
+        //TODO load properties from file
+        MongoClient mongoClient = new MongoClient("localhost", 27017);
+        MongoDatabase mongoDatabase = mongoClient.getDatabase(DB_NAME);
         return new SimulationResultDAO(mongoClient, mongoDatabase);
     }
 }

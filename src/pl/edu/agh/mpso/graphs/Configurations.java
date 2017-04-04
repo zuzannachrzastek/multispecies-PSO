@@ -54,8 +54,8 @@ public class Configurations {
 		for(SimulationResult result : results){
 			for(int cnt : counts){
 				if(meetsCriteria(result, speciesId, cnt)){
-					filteredResults.get(cnt).add(result.partial);
-					filteredQuality.get(cnt).add(result.bestFitness);
+					filteredResults.get(cnt).add(result.getPartial());
+					filteredQuality.get(cnt).add(result.getBestFitness());
 					break;
 				}
 			}
@@ -145,12 +145,13 @@ public class Configurations {
 	private static double round(double a){
 		return  (double) Math.round(a * 100) / 100;
 	}
-	
+
+	//TODO duplications: Distribution.java
 	private static boolean meetsCriteria(SimulationResult result, int speciesId, int speciesCnt){
 		try {
 			Field speciesField = SimulationResult.class.getDeclaredField("species" + speciesId);
 			int speciesFieldValue = (Integer) speciesField.get(result);
-			return result.totalParticles == NUMBER_OF_PARTICLES && speciesFieldValue == speciesCnt;
+			return result.getTotalParticles() == NUMBER_OF_PARTICLES && speciesFieldValue == speciesCnt;
 		} catch (Exception e) {
 			return false;
 		} 

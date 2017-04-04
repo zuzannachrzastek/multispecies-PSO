@@ -12,15 +12,16 @@ import pl.edu.agh.mpso.utils.RunUtils;
 
 public class LocalRunSpeciesShare{
 
-	public static void main(String[] args) throws InstantiationException, IllegalAccessException, IOException, InterruptedException {
-		FitnessFunction fitnessFunction = new Styblinski();
-		int NUMBER_OF_SPECIES = SpeciesType.values().length;
-		NUMBER_OF_DIMENSIONS = 100;
-		NUMBER_OF_ITERATIONS = 3000;
-		int executions = 30;
-		
-		for(int species = 1; species <= NUMBER_OF_SPECIES; species++){
-			RunUtils.runParallel(fitnessFunction, species, executions, NUMBER_OF_SPECIES);
-		}
-	}
+	//TODO
+//	public static void main(String[] args) throws InstantiationException, IllegalAccessException, IOException, InterruptedException {
+//		FitnessFunction fitnessFunction = new Styblinski();
+//		int NUMBER_OF_SPECIES = SpeciesType.values().length;
+//		NUMBER_OF_DIMENSIONS = 100;
+//		NUMBER_OF_ITERATIONS = 3000;
+//		int executions = 30;
+//
+//		for(int species = 1; species <= NUMBER_OF_SPECIES; species++){
+//			RunUtils.runParallel(fitnessFunction, species, executions, NUMBER_OF_SPECIES);
+//		}
+//	}
 }
