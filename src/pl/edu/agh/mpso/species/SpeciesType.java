@@ -49,6 +49,10 @@ public class SpeciesType {
         return typeNames[type];
     }
 
+    public int getType() {
+        return type;
+    }
+
     public Color getColor() {
         return color;
     }

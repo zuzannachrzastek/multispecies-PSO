@@ -15,22 +15,18 @@ import java.util.List;
  */
 public class SwarmUtils {
 
-    public static MultiSwarm createSwarm(FitnessFunction fitnessFunction){
-        final int [] particleArray = new int[]{6, 0, 0, 0, 0, 0, 0, 1};
+    public static MultiSwarm createSwarm(FitnessFunction fitnessFunction) {
+        final int[] particleArray = new int[]{6, 0, 0, 0, 0, 0, 0, 1};
 
         List<SwarmInformation> swarmInformations = createSwarmInfoList(particleArray);
-
-        SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()];
-        MultiSwarm multiSwarm = new MultiSwarm(swarmInformations.toArray(swarmInformationsArray), fitnessFunction);
-
+        MultiSwarm multiSwarm = new MultiSwarm(swarmInformations, fitnessFunction);
         setMultiSwarmParameters(multiSwarm, 1, 5);
-
         multiSwarm.init();
 
         return multiSwarm;
     }
 
-    public static void setMultiSwarmParameters(MultiSwarm multiSwarm, int size, int searchSpaceSize){
+    public static void setMultiSwarmParameters(MultiSwarm multiSwarm, int size, int searchSpaceSize) {
         Neighborhood neighbourhood = new Neighborhood1D(size, true);
         multiSwarm.setNeighborhood(neighbourhood);
 
@@ -43,11 +39,11 @@ public class SwarmUtils {
         multiSwarm.setMinPosition(-searchSpaceSize);
     }
 
-    public static List<SwarmInformation> createSwarmInfoList(int [] particles){
+    public static List<SwarmInformation> createSwarmInfoList(int[] particles) {
         List<SwarmInformation> swarmInformations = new ArrayList<SwarmInformation>();
 
-        for(int i = 0; i < particles.length; i++){
-            if(particles[i] != 0){
+        for (int i = 0; i < particles.length; i++) {
+            if (particles[i] != 0) {
                 SpeciesType type = SpeciesType.values()[i];
                 SwarmInformation swarmInformation = new SwarmInformation(particles[i], type);
                 swarmInformations.add(swarmInformation);

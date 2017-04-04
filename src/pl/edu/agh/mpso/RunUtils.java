@@ -4,6 +4,7 @@ import net.sourceforge.jswarm_pso.FitnessFunction;
 import net.sourceforge.jswarm_pso.Neighborhood;
 import net.sourceforge.jswarm_pso.Neighborhood1D;
 import pl.edu.agh.mpso.dao.SimulationResultDAO;
+import pl.edu.agh.mpso.dao.SwarmInfoEntity;
 import pl.edu.agh.mpso.output.SimulationOutput;
 import pl.edu.agh.mpso.output.SimulationOutputError;
 import pl.edu.agh.mpso.output.SimulationOutputOk;
@@ -17,6 +18,7 @@ import pl.edu.agh.mpso.transition.shift.DefaultShiftFunction;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static pl.edu.agh.mpso.Simulation.NUMBER_OF_DIMENSIONS;
 import static pl.edu.agh.mpso.Simulation.NUMBER_OF_ITERATIONS;
@@ -114,14 +116,7 @@ public class RunUtils {
                 .setPartial(partial)
                 .setBestFitness(multiSwarm.getBestFitness())
                 .setTotalParticles(NUMBER_OF_PARTICLES)
-                .setSpecies1(swarmInformations.get(0).getNumberOfParticles())
-                .setSpecies2(swarmInformations.get(1).getNumberOfParticles())
-                .setSpecies3(swarmInformations.get(2).getNumberOfParticles())
-                .setSpecies4(swarmInformations.get(3).getNumberOfParticles())
-                .setSpecies5(swarmInformations.get(4).getNumberOfParticles())
-                .setSpecies6(swarmInformations.get(5).getNumberOfParticles())
-                .setSpecies7(swarmInformations.get(6).getNumberOfParticles())
-                .setSpecies8(swarmInformations.get(7).getNumberOfParticles())
+                .setSwarmInformations(pl.edu.agh.mpso.utils.RunUtils.getSwarmEntityList(swarmInformations))
                 .setOrderFunction(multiSwarm.getOrderFunction().getClass().getSimpleName())
                 .setShiftFunction(multiSwarm.getShiftFunction().getClass().getSimpleName())
                 .build();

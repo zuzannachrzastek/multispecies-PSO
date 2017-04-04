@@ -20,6 +20,7 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import pl.edu.agh.mpso.swarm.SwarmInformation;
 
 import static pl.edu.agh.mpso.Simulation.NUMBER_OF_DIMENSIONS;
 import static pl.edu.agh.mpso.Simulation.NUMBER_OF_ITERATIONS;
@@ -33,9 +34,9 @@ public class SimulationResultDAO {
 	
 	private static final String DB_PROPERTIES_FILE = "db.properties";
 
-    private static final String DB_URI = "db_uri";
+    private static final String DB_URI = "mongodb://localhost:27017";
 
-    private static final String DB_NAME = "db_name";
+    private static final String DB_NAME = "multispecies-pso";
 
     private static SimulationResultDAO simulationResultDAO;
 
@@ -73,6 +74,7 @@ public class SimulationResultDAO {
     	
 		while(iterator.hasNext() && limit != 0){
     		Document next = iterator.next();
+            //TODO check if works
             SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();
             SimulationResult result = builder.setFitnessFunction(fitnessFunction)
                     .setIterations(iterations)
@@ -80,14 +82,7 @@ public class SimulationResultDAO {
                     .setPartial((List<Double>) next.get("partial"))
                     .setBestFitness(next.getDouble("bestFitness"))
                     .setTotalParticles(totalParticles)
-                    .setSpecies1(next.getInteger("species1"))
-                    .setSpecies2(next.getInteger("species2"))
-                    .setSpecies3(next.getInteger("species3"))
-                    .setSpecies4(next.getInteger("species4"))
-                    .setSpecies5(next.getInteger("species5"))
-                    .setSpecies6(next.getInteger("species6"))
-                    .setSpecies7(next.getInteger("species7"))
-                    .setSpecies8(next.getInteger("species8"))
+                    .setSwarmInformations((List<SwarmInfoEntity>) next.get("swarmInformations"))
                     .setOrderFunction(next.getString("orderFunction"))
                     .setShiftFunction(next.getString("shiftFunction"))
                     .build();
@@ -118,15 +113,16 @@ public class SimulationResultDAO {
 
     private static SimulationResultDAO createSimulationResultDAO() throws IOException {
         Properties props = new Properties();
-        InputStream input = SimulationResultDAO.class.getResourceAsStream("/" + DB_PROPERTIES_FILE);
+//        InputStream input = SimulationResultDAO.class.getResourceAsStream("/" + DB_PROPERTIES_FILE);
 
-        props.load(input);
+//        props.load(input);
 
         String dbUri = props.getProperty(DB_URI);
         String dbName = props.getProperty(DB_NAME);
 
-        MongoClient mongoClient = new MongoClient(new MongoClientURI(dbUri));
-        MongoDatabase mongoDatabase = mongoClient.getDatabase(dbName);
+        //TODO load properties from file
+        MongoClient mongoClient = new MongoClient("localhost", 27017);
+        MongoDatabase mongoDatabase = mongoClient.getDatabase(DB_NAME);
         return new SimulationResultDAO(mongoClient, mongoDatabase);
     }
 }
