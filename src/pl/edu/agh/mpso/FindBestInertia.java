@@ -9,12 +9,13 @@ public class FindBestInertia {
 	
 	public static void main(String [] args) throws InterruptedException{
 		Map<Double, Double> results = new HashMap<Double, Double>();
+		int [] particles = new int[]{40,0,0,0,0,0,0,0};
 //		NUMBER_OF_DIMENSIONS = 100;
 //		NUMBER_OF_ITERATIONS = 2000;
 		int executions = 15;
 		
 		for(double i = 0.0; i <= 1.0; i+=0.05){
-			RunUtils.runParallel(i, executions, results);
+			RunUtils.runParallel(i, 1.0, executions, results, particles, "inertia");
 		}
 
 		System.out.println("\nResults:");

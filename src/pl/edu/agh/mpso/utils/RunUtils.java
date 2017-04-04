@@ -48,14 +48,14 @@ public abstract class RunUtils {
         thread.join();
     }
 
-    public static void runParallel(final double par, final int executions, Map<Double, Double> results) throws InterruptedException {
+    public static void runParallel(final double inertia, final double maxVelocity, final int executions, Map<Double, Double> results, int[] particles, String param) throws InterruptedException {
         Thread thread = new Thread(new Runnable() {
             List<Double> fitnessList = new ArrayList<Double>(executions);
 
             public void run() {
                 for(int i = 0; i < executions; i++){
-                    System.out.println("" + par + ": " + i + " of " + executions);
-                    double fitness = runSimulation(new Rastrigin(), par, 1.0);
+//                    System.out.println("" + par + ": " + i + " of " + executions);
+                    double fitness = runSimulation(new Rastrigin(), inertia, maxVelocity, particles);
                     fitnessList.add(fitness);
                 }
 
@@ -65,7 +65,11 @@ public abstract class RunUtils {
                 }
                 double avg = sum / (double) executions;
 
-                results.put(par, avg);
+                if(param.equals("inertia")){
+                    results.put(inertia, avg);
+                } else {
+                    results.put(maxVelocity, avg);
+                }
             }
         });
 
@@ -149,13 +153,12 @@ public abstract class RunUtils {
         return result;
     }
 
-    private static double runSimulation(FitnessFunction fitnessFunction, double inertia, double maxVelocity) {
+    private static double runSimulation(FitnessFunction fitnessFunction, double inertia, double maxVelocity, int[] particles) {
         int cnt = 0;
-        int [] particles = new int[]{40,0,0,0,0,0,0,0};
 
         List<SwarmInformation> swarmInformations = SwarmUtils.createSwarmInfoListWithCounter(particles, cnt);
 
-        SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()];
+//        SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()];
         MultiSwarm multiSwarm = new MultiSwarm(swarmInformations, fitnessFunction);
 
         SwarmUtils.setMultiSwarmParameters(multiSwarm, cnt/5, inertia, 5.12);
