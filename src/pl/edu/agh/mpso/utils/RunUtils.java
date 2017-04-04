@@ -21,10 +21,7 @@ import pl.edu.agh.mpso.velocity.LinearVelocityFunction;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static pl.edu.agh.mpso.Simulation.*;
@@ -51,8 +48,7 @@ public abstract class RunUtils {
         thread.join();
     }
 
-    public static void runParallel(final double par, final int executions) throws InterruptedException {
-        Map<Double, Double> results = new HashMap<Double, Double>();
+    public static void runParallel(final double par, final int executions, Map<Double, Double> results) throws InterruptedException {
         Thread thread = new Thread(new Runnable() {
             List<Double> fitnessList = new ArrayList<Double>(executions);
 
@@ -75,10 +71,6 @@ public abstract class RunUtils {
 
         thread.start();
         thread.join();
-
-        for(double i = 0.0; i <= 1.0; i+=0.05){
-            System.out.println("" + i + " : " + results.get(i));
-        }
     }
 
     static void simulate(FitnessFunction fitnessFunction,
