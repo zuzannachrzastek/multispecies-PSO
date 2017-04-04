@@ -20,17 +20,17 @@ public class SwarmUtils {
 
         List<SwarmInformation> swarmInformations = createSwarmInfoList(particleArray);
         MultiSwarm multiSwarm = new MultiSwarm(swarmInformations, fitnessFunction);
-        setMultiSwarmParameters(multiSwarm, 1, 5);
+        setMultiSwarmParameters(multiSwarm, 1, 0.95, 5);
         multiSwarm.init();
 
         return multiSwarm;
     }
 
-    public static void setMultiSwarmParameters(MultiSwarm multiSwarm, int size, int searchSpaceSize) {
+    public static void setMultiSwarmParameters(MultiSwarm multiSwarm, int size, double inertia, double searchSpaceSize) {
         Neighborhood neighbourhood = new Neighborhood1D(size, true);
         multiSwarm.setNeighborhood(neighbourhood);
 
-        multiSwarm.setInertia(0.95);
+        multiSwarm.setInertia(inertia);
         multiSwarm.setNeighborhoodIncrement(0.9);
         multiSwarm.setParticleIncrement(0.9);
         multiSwarm.setGlobalIncrement(0.9);
@@ -46,6 +46,23 @@ public class SwarmUtils {
             if (particles[i] != 0) {
                 SpeciesType type = SpeciesType.values()[i];
                 SwarmInformation swarmInformation = new SwarmInformation(particles[i], type);
+                swarmInformations.add(swarmInformation);
+            }
+        }
+
+        return swarmInformations;
+    }
+
+    public static List<SwarmInformation> createSwarmInfoListWithCounter(int[] particles, int cnt) {
+        List<SwarmInformation> swarmInformations = new ArrayList<SwarmInformation>();
+
+        for(int i = 0; i < particles.length; i++){
+            if(particles[i] != 0){
+                cnt += particles[i];
+
+                SpeciesType type = SpeciesType.values()[i];
+                SwarmInformation swarmInformation = new SwarmInformation(particles[i], type);
+
                 swarmInformations.add(swarmInformation);
             }
         }
