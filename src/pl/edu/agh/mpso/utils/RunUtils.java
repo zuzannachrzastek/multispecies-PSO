@@ -37,7 +37,7 @@ public abstract class RunUtils {
             public void run() {
                 for (int i = 0; i < executions; i++) {
                     try {
-                        simulate(fitnessFunction, speciesArray, id, executions, i);
+                        SimulationUtils.simulate(fitnessFunction, speciesArray, id, executions, i);
                     } catch (Throwable e) {
                         e.printStackTrace();
                     }
@@ -55,7 +55,7 @@ public abstract class RunUtils {
             public void run() {
                 for(int i = 0; i < executions; i++){
 //                    System.out.println("" + par + ": " + i + " of " + executions);
-                    double fitness = runSimulation(new Rastrigin(), inertia, maxVelocity, particles);
+                    double fitness = SimulationUtils.runSimulation(new Rastrigin(), inertia, maxVelocity, particles);
                     fitnessList.add(fitness);
                 }
 
@@ -75,30 +75,6 @@ public abstract class RunUtils {
 
         thread.start();
         thread.join();
-    }
-
-    static void simulate(FitnessFunction fitnessFunction,
-                         List<SwarmInformation> speciesArray, int id, int executions, int i) throws IOException {
-        SimulationOutput output = null;
-        try {
-            long tic = System.currentTimeMillis();
-            SimulationResult result = run(speciesArray, fitnessFunction);
-            long toc = System.currentTimeMillis();
-            long diff = toc - tic;
-            long seconds = diff / 1000L;
-            long minutes = seconds / 60L;
-            long hours = minutes / 60L;
-            System.out.println("" + id + ": Execution " + (i + 1) + " of " + executions);
-            System.out.println("\tDone in: " + hours + " hours " + (minutes % 60) + " minutes " + (seconds % 60) + " seconds");
-
-            output = new SimulationOutputOk(result);
-            SimulationResultDAO.getInstance().writeResult(result);
-            SimulationResultDAO.getInstance().close();
-            System.out.println(result.getBestFitness());
-        } catch (Throwable e) {
-            e.printStackTrace();
-            output = new SimulationOutputError(e.toString() + ": " + e.getMessage());
-        }
     }
 
     public static SimulationResult runWithCounter(int[] particles, FitnessFunction fitnessFunction, double initialVelocity, double finalVelocity, int VELOCITY_UPDATES) {
@@ -137,41 +113,9 @@ public abstract class RunUtils {
                 .setPartial(partial)
                 .setBestFitness(multiSwarm.getBestFitness())
                 .setTotalParticles(NUMBER_OF_PARTICLES)
-                .setSwarmInformations(getSwarmEntityList(swarmInformations))
+                .setSwarmInformations(SwarmUtils.getSwarmEntityList(swarmInformations))
                 .setInitialVelocity(initialVelocity)
                 .setFinalVelocity(finalVelocity).build();
-    }
-
-    public static List<SwarmInfoEntity> getSwarmEntityList(List<SwarmInformation> swarmInformations) {
-        List<SwarmInfoEntity> result = new ArrayList<>();
-        //the original list is grouped by type and aggregated by number of particles
-        swarmInformations.stream()
-                .collect(
-                        Collectors.groupingBy(swarmInformation -> swarmInformation.getType().getType(),
-                                Collectors.summingInt(SwarmInformation::getNumberOfParticles)))
-                .forEach(((type, numberOfParticles) -> result.add(new SwarmInfoEntity(numberOfParticles, type))));
-        return result;
-    }
-
-    private static double runSimulation(FitnessFunction fitnessFunction, double inertia, double maxVelocity, int[] particles) {
-        int cnt = 0;
-
-        List<SwarmInformation> swarmInformations = SwarmUtils.createSwarmInfoListWithCounter(particles, cnt);
-
-//        SwarmInformation [] swarmInformationsArray = new SwarmInformation [swarmInformations.size()];
-        MultiSwarm multiSwarm = new MultiSwarm(swarmInformations, fitnessFunction);
-
-        SwarmUtils.setMultiSwarmParameters(multiSwarm, cnt/5, inertia, 5.12);
-
-        multiSwarm.setAbsMaxVelocity(maxVelocity);
-        multiSwarm.init();
-
-        for(int i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
-            // Evolve swarm
-            multiSwarm.evolve();
-        }
-
-        return multiSwarm.getBestFitness();
     }
 
 
@@ -206,7 +150,7 @@ public abstract class RunUtils {
                 .setPartial(partial)
                 .setBestFitness(multiSwarm.getBestFitness())
                 .setTotalParticles(NUMBER_OF_PARTICLES)
-                .setSwarmInformations(getSwarmEntityList(particles))
+                .setSwarmInformations(SwarmUtils.getSwarmEntityList(particles))
                 .setOrderFunction(multiSwarm.getOrderFunction().getClass().getSimpleName())
                 .setShiftFunction(multiSwarm.getShiftFunction().getClass().getSimpleName())
                 .build();
