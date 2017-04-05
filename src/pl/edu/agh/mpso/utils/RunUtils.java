@@ -119,10 +119,10 @@ public abstract class RunUtils {
     }
 
 
-    public static SimulationResult run(List<SwarmInformation> particles, FitnessFunction fitnessFunction) {
-        MultiSwarm multiSwarm = new MultiSwarm(particles, fitnessFunction);
+    public static SimulationResult run(MultiSwarm multiSwarm, List<SwarmInformation> particles, FitnessFunction fitnessFunction, double inertia, int searchSpaceSize, int size) {
+//        MultiSwarm multiSwarm = new MultiSwarm(particles, fitnessFunction);
 
-        SwarmUtils.setMultiSwarmParameters(multiSwarm, 7, 0.95,20);
+        SwarmUtils.setMultiSwarmParameters(multiSwarm, size, inertia, searchSpaceSize);
 
         multiSwarm.setOrderFunction(new DefaultOrderFunction());
         multiSwarm.setShiftFunction(new DefaultShiftFunction());
@@ -132,15 +132,7 @@ public abstract class RunUtils {
 
         List<Double> partial = new ArrayList<Double>(NUMBER_OF_ITERATIONS / 100);
 
-        for (int i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
-            // Evolve swarm
-            multiSwarm.evolve();
-
-            //display partial results
-            if (NUMBER_OF_ITERATIONS > 100 && (i % (NUMBER_OF_ITERATIONS / 100) == 0)) {
-                partial.add(multiSwarm.getBestFitness());
-            }
-        }
+        evolveAndDisplay(multiSwarm, partial);
 
         //create output.json
         SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();

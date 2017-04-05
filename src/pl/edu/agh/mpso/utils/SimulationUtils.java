@@ -24,7 +24,10 @@ public class SimulationUtils {
         SimulationOutput output = null;
         try {
             long tic = System.currentTimeMillis();
-            SimulationResult result = RunUtils.run(speciesArray, fitnessFunction);
+
+            MultiSwarm multiSwarm = new MultiSwarm(speciesArray, fitnessFunction);
+            SimulationResult result = RunUtils.run(multiSwarm, speciesArray, fitnessFunction, 0.95, 20, 7);
+
             long toc = System.currentTimeMillis();
             long diff = toc - tic;
             long seconds = diff / 1000L;
