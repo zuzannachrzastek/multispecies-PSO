@@ -106,8 +106,10 @@ public class BestVelocity {
 		}
 
 		List<SwarmInformation> swarmInformations = SwarmUtils.createSwarmInfoList(speciesArray);
+		int cnt = 0;
 
-		SimulationResult result = RunUtils.runWithCounter(fitnessFunction, initialVelocity, finalVelocity, VELOCITY_UPDATES, swarmInformations);
+		MultiSwarm multiSwarm = new MultiSwarm(swarmInformations, fitnessFunction);
+		SimulationResult result = RunUtils.runWithCounter(multiSwarm, fitnessFunction, initialVelocity, finalVelocity, VELOCITY_UPDATES, swarmInformations, 0.95, 20, cnt/5);
 		RunUtils.generateOutputFile(result);
 	}
 }

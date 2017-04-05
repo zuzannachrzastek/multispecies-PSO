@@ -77,11 +77,10 @@ public abstract class RunUtils {
         thread.join();
     }
 
-    public static SimulationResult runWithCounter(FitnessFunction fitnessFunction, double initialVelocity, double finalVelocity, int VELOCITY_UPDATES, List<SwarmInformation> swarmInformations) {
+    public static SimulationResult runWithCounter(MultiSwarm multiSwarm, FitnessFunction fitnessFunction, double initialVelocity, double finalVelocity, int VELOCITY_UPDATES, List<SwarmInformation> swarmInformations, double inertia, int searchSpaceSize, int size) {
         int cnt = 0;
 
-        MultiSwarm multiSwarm = new MultiSwarm(swarmInformations, fitnessFunction);
-        SwarmUtils.setMultiSwarmParameters(multiSwarm,cnt / 5, 0.95,20);
+        SwarmUtils.setMultiSwarmParameters(multiSwarm,size, inertia,searchSpaceSize);
         multiSwarm.setVelocityFunction(new LinearVelocityFunction(initialVelocity, finalVelocity).setUpdatesCnt(VELOCITY_UPDATES).setUpdatesInterval(NUMBER_OF_ITERATIONS / VELOCITY_UPDATES));
         multiSwarm.init();
 
@@ -120,7 +119,6 @@ public abstract class RunUtils {
 
 
     public static SimulationResult run(MultiSwarm multiSwarm, List<SwarmInformation> particles, FitnessFunction fitnessFunction, double inertia, int searchSpaceSize, int size) {
-//        MultiSwarm multiSwarm = new MultiSwarm(particles, fitnessFunction);
 
         SwarmUtils.setMultiSwarmParameters(multiSwarm, size, inertia, searchSpaceSize);
 
