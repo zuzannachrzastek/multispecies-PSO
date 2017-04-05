@@ -17,6 +17,7 @@ import pl.edu.agh.mpso.chart.ScatterChart;
 import pl.edu.agh.mpso.dao.SimulationResultDAO;
 import pl.edu.agh.mpso.output.SimulationResult;
 import pl.edu.agh.mpso.species.SpeciesType;
+import pl.edu.agh.mpso.utils.MiscellaneuosUtils;
 
 public class Configurations {
 	private static final String fitnessFunction = "Rastrigin";
@@ -53,7 +54,7 @@ public class Configurations {
 		
 		for(SimulationResult result : results){
 			for(int cnt : counts){
-				if(meetsCriteria(result, speciesId, cnt)){
+				if(MiscellaneuosUtils.meetsCriteria(result, speciesId, cnt)){
 					filteredResults.get(cnt).add(result.getPartial());
 					filteredQuality.get(cnt).add(result.getBestFitness());
 					break;
@@ -145,16 +146,4 @@ public class Configurations {
 	private static double round(double a){
 		return  (double) Math.round(a * 100) / 100;
 	}
-
-	//TODO duplications: Distribution.java
-	private static boolean meetsCriteria(SimulationResult result, int speciesId, int speciesCnt){
-		try {
-			Field speciesField = SimulationResult.class.getDeclaredField("species" + speciesId);
-			int speciesFieldValue = (Integer) speciesField.get(result);
-			return result.getTotalParticles() == NUMBER_OF_PARTICLES && speciesFieldValue == speciesCnt;
-		} catch (Exception e) {
-			return false;
-		} 
-	}
-
 }

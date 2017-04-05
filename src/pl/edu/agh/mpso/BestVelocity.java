@@ -18,6 +18,7 @@ import pl.edu.agh.mpso.output.SimulationResult;
 import pl.edu.agh.mpso.species.SpeciesType;
 import pl.edu.agh.mpso.swarm.MultiSwarm;
 import pl.edu.agh.mpso.swarm.SwarmInformation;
+import pl.edu.agh.mpso.utils.MiscellaneuosUtils;
 import pl.edu.agh.mpso.utils.RunUtils;
 import pl.edu.agh.mpso.utils.SwarmUtils;
 import pl.edu.agh.mpso.velocity.LinearVelocityFunction;
@@ -110,6 +111,6 @@ public class BestVelocity {
 
 		MultiSwarm multiSwarm = new MultiSwarm(swarmInformations, fitnessFunction);
 		SimulationResult result = RunUtils.runWithCounter(multiSwarm, fitnessFunction, initialVelocity, finalVelocity, VELOCITY_UPDATES, swarmInformations, 0.95, 20, cnt/5);
-		RunUtils.generateOutputFile(result);
+		MiscellaneuosUtils.generateOutputFile(result);
 	}
 }

@@ -1,28 +1,15 @@
 package pl.edu.agh.mpso.utils;
 
-import com.google.gson.Gson;
 import net.sourceforge.jswarm_pso.FitnessFunction;
-import net.sourceforge.jswarm_pso.Neighborhood;
-import net.sourceforge.jswarm_pso.Neighborhood1D;
-import pl.edu.agh.mpso.dao.SimulationResultDAO;
-import pl.edu.agh.mpso.dao.SwarmInfoEntity;
 import pl.edu.agh.mpso.fitness.Rastrigin;
-import pl.edu.agh.mpso.output.SimulationOutput;
-import pl.edu.agh.mpso.output.SimulationOutputError;
-import pl.edu.agh.mpso.output.SimulationOutputOk;
 import pl.edu.agh.mpso.output.SimulationResult;
-import pl.edu.agh.mpso.species.SpeciesType;
 import pl.edu.agh.mpso.swarm.MultiSwarm;
 import pl.edu.agh.mpso.swarm.SwarmInformation;
 import pl.edu.agh.mpso.transition.order.DefaultOrderFunction;
 import pl.edu.agh.mpso.transition.shift.DefaultShiftFunction;
 import pl.edu.agh.mpso.velocity.LinearVelocityFunction;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static pl.edu.agh.mpso.Simulation.*;
 
@@ -32,44 +19,39 @@ import static pl.edu.agh.mpso.Simulation.*;
 public abstract class RunUtils {
 
     public static void runParallel(final int id, final FitnessFunction fitnessFunction, final List<SwarmInformation> speciesArray, final int executions) throws InterruptedException {
-        Thread thread = new Thread(new Runnable() {
-
-            public void run() {
-                for (int i = 0; i < executions; i++) {
-                    try {
-                        SimulationUtils.simulate(fitnessFunction, speciesArray, id, executions, i);
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                    }
+        Thread thread = new Thread(() -> {
+            for (int i = 0; i < executions; i++) {
+                try {
+                    SimulationUtils.simulate(fitnessFunction, speciesArray, id, executions, i);
+                } catch (Throwable e) {
+                    e.printStackTrace();
                 }
             }
         });
+
         thread.start();
         thread.join();
     }
 
     public static void runParallel(final double inertia, final double maxVelocity, final int executions, Map<Double, Double> results, int[] particles, String param) throws InterruptedException {
-        Thread thread = new Thread(new Runnable() {
-            List<Double> fitnessList = new ArrayList<Double>(executions);
+        List<Double> fitnessList = new ArrayList<Double>(executions);
 
-            public void run() {
-                for(int i = 0; i < executions; i++){
-//                    System.out.println("" + par + ": " + i + " of " + executions);
-                    double fitness = SimulationUtils.runSimulation(new Rastrigin(), inertia, maxVelocity, particles);
-                    fitnessList.add(fitness);
-                }
+        Thread thread = new Thread(() -> {
+            for(int i = 0; i < executions; i++){
+                double fitness = SimulationUtils.runSimulation(new Rastrigin(), inertia, maxVelocity, particles);
+                fitnessList.add(fitness);
+            }
 
-                double sum = 0.0;
-                for(double f : fitnessList){
-                    sum += f;
-                }
-                double avg = sum / (double) executions;
+            double sum = 0.0;
+            for(double f : fitnessList){
+                sum += f;
+            }
+            double avg = sum / (double) executions;
 
-                if(param.equals("inertia")){
-                    results.put(inertia, avg);
-                } else {
-                    results.put(maxVelocity, avg);
-                }
+            if(param.equals("inertia")){
+                results.put(inertia, avg);
+            } else {
+                results.put(maxVelocity, avg);
             }
         });
 
@@ -112,7 +94,7 @@ public abstract class RunUtils {
             //display partial results
             if (NUMBER_OF_ITERATIONS > 100 && (i % (NUMBER_OF_ITERATIONS / 100) == 0)) {
                 partial.add(multiSwarm.getBestFitness());
-                System.out.println(multiSwarm.getBestFitness());
+                System.out.println("best fitness: " + multiSwarm.getBestFitness());
             }
         }
     }
@@ -144,21 +126,5 @@ public abstract class RunUtils {
                 .setOrderFunction(multiSwarm.getOrderFunction().getClass().getSimpleName())
                 .setShiftFunction(multiSwarm.getShiftFunction().getClass().getSimpleName())
                 .build();
-    }
-
-    public static void generateOutputFile(SimulationResult result) throws IOException {
-        SimulationOutput output = null;
-        try {
-            output = new SimulationOutputOk(result);
-            SimulationResultDAO.getInstance().writeResult(result);
-            SimulationResultDAO.getInstance().close();
-        } catch (Throwable e) {
-            output = new SimulationOutputError(e.toString() + ": " + e.getMessage());
-        } finally {
-            Writer writer = new FileWriter("output.json");
-            Gson gson = new Gson();
-            gson.toJson(output, writer);
-            writer.close();
-        }
     }
 }

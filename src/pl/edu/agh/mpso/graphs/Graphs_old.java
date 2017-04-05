@@ -16,6 +16,7 @@ import pl.edu.agh.mpso.chart.ScatterChart;
 import pl.edu.agh.mpso.dao.SimulationResultDAO;
 import pl.edu.agh.mpso.output.SimulationResult;
 import pl.edu.agh.mpso.species.SpeciesType;
+import pl.edu.agh.mpso.utils.MiscellaneuosUtils;
 
 public class Graphs_old {
 	private static final String fitnessFunction = "Rastrigin";
@@ -48,7 +49,7 @@ public class Graphs_old {
 		
 		for(SimulationResult result : results){
 			for(int arg = 0; arg < 25; arg+=5){
-				if(meetsCriteria(result, speciesId, getCount(arg))){
+				if(MiscellaneuosUtils.meetsCriteria(result, speciesId, getCount(arg))){
 					filteredResults.get(arg).add(result.getPartial());
 					break;
 				}
@@ -100,16 +101,4 @@ public class Graphs_old {
 		float speciesShare = (float) arg / (float) argSum;
 		return (int) (speciesShare * NUMBER_OF_PARTICLES);
 	}
-
-	//TODO duplications: Distribution.java
-	private static boolean meetsCriteria(SimulationResult result, int speciesId, int speciesCnt){
-		try {
-			Field speciesField = SimulationResult.class.getDeclaredField("species" + speciesId);
-			int speciesFieldValue = (Integer) speciesField.get(result);
-			return result.getTotalParticles() == NUMBER_OF_PARTICLES && speciesFieldValue == speciesCnt;
-		} catch (Exception e) {
-			return false;
-		} 
-	}
-
 }

@@ -44,12 +44,6 @@ public class LocalRun {
             species.add(new SwarmInformation(new SpeciesType(7)));
         }
 
-//		runParallel(0, fitnessFunction, new int[]{25,0,0,0,0,0,0,0}, executions);
-//		runParallel(0, fitnessFunction, new int[]{0,10,5,5,0,0,0,5}, executions);
-//		runParallel(0, fitnessFunction, new int[]{1,4,0,2,0,0,0,18}, executions);
-//		runParallel(0, fitnessFunction, new int[]{0,5,5,5,0,0,0,10}, executions);
 		RunUtils.runParallel(0, fitnessFunction, species, executions);
-//		runParallel(0, fitnessFunction, new int[]{5,7,6,7,0,0,0,0}, executions);
-//		runParallel(0, fitnessFunction, new int[]{0,6,5,6,1,1,1,5}, executions);
 	}
 }
