@@ -20,11 +20,7 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import pl.edu.agh.mpso.swarm.SwarmInformation;
 
-import static pl.edu.agh.mpso.Simulation.NUMBER_OF_DIMENSIONS;
-import static pl.edu.agh.mpso.Simulation.NUMBER_OF_ITERATIONS;
-import static pl.edu.agh.mpso.Simulation.NUMBER_OF_PARTICLES;
 
 public class SimulationResultDAO {
 //	private static final String COLLECTION_NAME = "speciesShareFinal";
@@ -53,8 +49,7 @@ public class SimulationResultDAO {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = mapper.valueToTree(result);
         ((ObjectNode)jsonNode).put("timestamp", new Timestamp(System.currentTimeMillis()).toString());
-        mongoDatabase.getCollection(COLLECTION_NAME)
-                                       .insertOne(Document.parse(jsonNode.toString()));
+        mongoDatabase.getCollection(COLLECTION_NAME).insertOne(Document.parse(jsonNode.toString()));
     }
     
     public List<SimulationResult> getResults(String fitnessFunction, int dimensions, int iterations, int totalParticles){
@@ -65,7 +60,9 @@ public class SimulationResultDAO {
 	public List<SimulationResult> getResults(String fitnessFunction, int dimensions, int iterations, int totalParticles, int limit){
     	BasicDBObject query = new BasicDBObject("fitnessFunction", fitnessFunction)
     		.append("dimensions", dimensions).append("iterations", iterations).append("totalParticles", totalParticles);
-    	
+
+    	System.out.println("query: " + query.toString());
+
     	FindIterable<Document> find = mongoDatabase.getCollection(COLLECTION_NAME).find(query);
     	if(limit > 0) find = find.limit(limit);
     	List<SimulationResult> results = new ArrayList<SimulationResult>();
@@ -86,7 +83,6 @@ public class SimulationResultDAO {
                     .setOrderFunction(next.getString("orderFunction"))
                     .setShiftFunction(next.getString("shiftFunction"))
                     .build();
-
 
     		//TODO - best velocity
     		

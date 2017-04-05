@@ -1,11 +1,8 @@
 package pl.edu.agh.mpso.graphs;
 
-import static pl.edu.agh.mpso.Simulation.NUMBER_OF_PARTICLES;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,9 +17,9 @@ import pl.edu.agh.mpso.species.SpeciesType;
 import pl.edu.agh.mpso.utils.MiscellaneuosUtils;
 
 public class Configurations {
-	private static final String fitnessFunction = "Rastrigin";
+	private static final String fitnessFunction = "Schwefel";
 	private final static int dimensions = 100;
-	private final static int iterations = 3000000;
+	private final static int iterations = 3000;
 	private final static int totalParticles = 25;
 	private final static int NUMBER_OF_SPECIES = SpeciesType.values().length;
 	
@@ -31,17 +28,24 @@ public class Configurations {
 	private static Map<Integer, List<List<Double>>> filteredResults = new HashMap<Integer, List<List<Double>>>();
 	private static Map<Integer, List<Double>> filteredQuality = new HashMap<Integer, List<Double>>();
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		for(int i = 1; i <= NUMBER_OF_SPECIES; i++) getPartialsForSpecies(i);
 	}
-	
-	
-	private static void getPartialsForSpecies(int speciesId) throws IOException{
+
+	private static void getPartialsForSpecies(int speciesId) throws IOException, ClassNotFoundException {
 		System.out.println("Getting results");
 		SimulationResultDAO dao = SimulationResultDAO.getInstance();
-		List<SimulationResult> results = dao.getResults(fitnessFunction, dimensions, iterations, totalParticles);
+
+		String className = Class.forName("pl.edu.agh.mpso.fitness." + fitnessFunction).toString().substring(6);
+		System.out.println("className: " + className);
+
+		List<SimulationResult> results = dao.getResults(className, dimensions, iterations, totalParticles);
 		dao.close();
 		System.out.println("Results loaded");
+
+		for(SimulationResult result : results){
+			System.out.println("before filtration: " + result.toString());
+		}
 		
 		
 		System.out.println("Filtering results");
@@ -51,7 +55,13 @@ public class Configurations {
 			List<Double> bestQuality = new ArrayList<Double>();
 			filteredQuality.put(cnt, bestQuality);
 		}
-		
+
+		System.out.println("HELLO");
+		for(SimulationResult result : results){
+			System.out.println("###result: " + result.toString());
+		}
+
+
 		for(SimulationResult result : results){
 			for(int cnt : counts){
 				if(MiscellaneuosUtils.meetsCriteria(result, speciesId, cnt)){
@@ -60,7 +70,6 @@ public class Configurations {
 					break;
 				}
 			}
-			
 		}
 		
 		System.out.println("Preparing chart data");
