@@ -3,12 +3,14 @@ package pl.edu.agh.mpso.utils;
 import net.sourceforge.jswarm_pso.FitnessFunction;
 import net.sourceforge.jswarm_pso.Neighborhood;
 import net.sourceforge.jswarm_pso.Neighborhood1D;
+import pl.edu.agh.mpso.dao.SwarmInfoEntity;
 import pl.edu.agh.mpso.species.SpeciesType;
 import pl.edu.agh.mpso.swarm.MultiSwarm;
 import pl.edu.agh.mpso.swarm.SwarmInformation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Zuzanna on 3/31/2017.
@@ -68,5 +70,16 @@ public class SwarmUtils {
         }
 
         return swarmInformations;
+    }
+
+    public static List<SwarmInfoEntity> getSwarmEntityList(List<SwarmInformation> swarmInformations) {
+        List<SwarmInfoEntity> result = new ArrayList<>();
+        //the original list is grouped by type and aggregated by number of particles
+        swarmInformations.stream()
+                .collect(
+                        Collectors.groupingBy(swarmInformation -> swarmInformation.getType().getType(),
+                                Collectors.summingInt(SwarmInformation::getNumberOfParticles)))
+                .forEach(((type, numberOfParticles) -> result.add(new SwarmInfoEntity(numberOfParticles, type))));
+        return result;
     }
 }

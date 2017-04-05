@@ -4,22 +4,30 @@ import static pl.edu.agh.mpso.Simulation.NUMBER_OF_DIMENSIONS;
 import static pl.edu.agh.mpso.Simulation.NUMBER_OF_ITERATIONS;
 import static pl.edu.agh.mpso.Simulation.NUMBER_OF_PARTICLES;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.google.gson.Gson;
 import net.sourceforge.jswarm_pso.FitnessFunction;
 import net.sourceforge.jswarm_pso.Neighborhood;
 import net.sourceforge.jswarm_pso.Neighborhood1D;
+import pl.edu.agh.mpso.dao.SimulationResultDAO;
 import pl.edu.agh.mpso.dao.SwarmInfoEntity;
 import pl.edu.agh.mpso.fitness.Rastrigin;
+import pl.edu.agh.mpso.output.SimulationOutput;
+import pl.edu.agh.mpso.output.SimulationOutputError;
+import pl.edu.agh.mpso.output.SimulationOutputOk;
 import pl.edu.agh.mpso.output.SimulationResult;
 import pl.edu.agh.mpso.species.SpeciesType;
 import pl.edu.agh.mpso.swarm.MultiSwarm;
 import pl.edu.agh.mpso.swarm.SwarmInformation;
 
 import pl.edu.agh.mpso.utils.RunUtils;
+import pl.edu.agh.mpso.utils.SwarmUtils;
 
 /**
  *
@@ -83,54 +91,10 @@ public class Scalarm {
 				speciesArray[i] = (int) (speciesShare * NUMBER_OF_PARTICLES);
 			}
 		}
+		//TODO transform speciesArray to SwarmInformation
+//		MultiSwarm multiSwarm = new MultiSwarm(speciesArray, fitnessFunction);
+//		SimulationResult result = RunUtils.run(multiSwarm, speciesArray, fitnessFunction, 0.95, 100, multiSwarm.getNumberOfParticles()/5);
 
-		//TODO
-//		SimulationResult result = RunUtils.run(speciesArray, fitnessFunction);
-//		RunUtils.generateOutputFile(speciesArray, fitnessFunction, result);
-	}
-
-	private static SimulationResult run(List<SwarmInformation> swarmInformations, FitnessFunction fitnessFunction) {
-		MultiSwarm multiSwarm = new MultiSwarm(swarmInformations, fitnessFunction);
-		
-		Neighborhood neighbourhood = new Neighborhood1D(multiSwarm.getNumberOfParticles() / 5, true);
-		multiSwarm.setNeighborhood(neighbourhood);
-		
-		
-		multiSwarm.setNeighborhoodIncrement(0.9);
-		multiSwarm.setInertia(0.95);
-		multiSwarm.setParticleIncrement(0.9);
-		multiSwarm.setGlobalIncrement(0.9);
-		
-		multiSwarm.setMaxPosition(100);
-		multiSwarm.setMinPosition(-100);
-		
-		List<Double> partial = new ArrayList<Double>(NUMBER_OF_ITERATIONS / 100);
-		
-		for(int i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
-			// Evolve swarm
-			multiSwarm.evolve();
-			
-			//display partial results
-			if(NUMBER_OF_ITERATIONS > 100 && (i % (NUMBER_OF_ITERATIONS / 100) == 0)){
-				partial.add(multiSwarm.getBestFitness());
-				System.out.println(multiSwarm.getBestFitness());
-			}
-		}
-		
-		//print final results
-		System.out.println(multiSwarm.getBestFitness());
-		
-		//create output.json
-        SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();
-        return builder.setFitnessFunction(fitnessFunction.getClass().getName())
-                .setIterations(NUMBER_OF_ITERATIONS)
-                .setDimensions(NUMBER_OF_DIMENSIONS)
-                .setPartial(partial)
-                .setBestFitness(multiSwarm.getBestFitness())
-                .setTotalParticles(NUMBER_OF_PARTICLES)
-				.setSwarmInformations(swarmInformations.stream()
-						.map(a -> new SwarmInfoEntity(a.getNumberOfParticles(), a.getType().getType()))
-						.collect(Collectors.toList()))
-                .build();
+//		RunUtils.generateOutputFile(result);
 	}
 }

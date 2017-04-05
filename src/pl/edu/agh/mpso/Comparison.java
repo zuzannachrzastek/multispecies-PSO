@@ -21,6 +21,7 @@ import pl.edu.agh.mpso.fitness.Rastrigin;
 import pl.edu.agh.mpso.species.SpeciesType;
 import pl.edu.agh.mpso.swarm.MultiSwarm;
 import pl.edu.agh.mpso.swarm.SwarmInformation;
+import pl.edu.agh.mpso.utils.SwarmUtils;
 
 //TODO DOESN'T WORK
 @SuppressWarnings("rawtypes")
@@ -110,17 +111,7 @@ public class Comparison {
         }
         MultiSwarm multiSwarm = new MultiSwarm(swarmInformations, new Rastrigin());
 
-        Neighborhood neighbourhood = new Neighborhood1D(multiSwarm.getNumberOfParticles() / 5, true);
-        multiSwarm.setNeighborhood(neighbourhood);
-
-
-        multiSwarm.setNeighborhoodIncrement(0.9);
-        multiSwarm.setInertia(0.95);
-        multiSwarm.setParticleIncrement(0.9);
-        multiSwarm.setGlobalIncrement(0.9);
-
-        multiSwarm.setMaxPosition(100);
-        multiSwarm.setMinPosition(-100);
+        SwarmUtils.setMultiSwarmParameters(multiSwarm, multiSwarm.getNumberOfParticles()/5, 0.95, 100);
 
         for (int i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
             // Evolve swarm
