@@ -34,9 +34,9 @@ public class SimulationResultDAO {
 	
 	private static final String DB_PROPERTIES_FILE = "db.properties";
 
-    private static final String DB_URI = "mongodb://localhost:27017";
+    private static final String DB_URI = "db_uri";
 
-    private static final String DB_NAME = "multispecies-pso";
+    private static final String DB_NAME = "db_name";
 
     private static SimulationResultDAO simulationResultDAO;
 
@@ -113,16 +113,16 @@ public class SimulationResultDAO {
 
     private static SimulationResultDAO createSimulationResultDAO() throws IOException {
         Properties props = new Properties();
-//        InputStream input = SimulationResultDAO.class.getResourceAsStream("/" + DB_PROPERTIES_FILE);
+        InputStream input = SimulationResultDAO.class.getResourceAsStream("/" + DB_PROPERTIES_FILE);
 
-//        props.load(input);
+        props.load(input);
 
         String dbUri = props.getProperty(DB_URI);
         String dbName = props.getProperty(DB_NAME);
 
         //TODO load properties from file
-        MongoClient mongoClient = new MongoClient("localhost", 27017);
-        MongoDatabase mongoDatabase = mongoClient.getDatabase(DB_NAME);
+        MongoClient mongoClient = new MongoClient(new MongoClientURI(dbUri));
+        MongoDatabase mongoDatabase = mongoClient.getDatabase(dbName);
         return new SimulationResultDAO(mongoClient, mongoDatabase);
     }
 }
