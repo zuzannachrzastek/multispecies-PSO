@@ -77,30 +77,17 @@ public abstract class RunUtils {
         thread.join();
     }
 
-    public static SimulationResult runWithCounter(int[] particles, FitnessFunction fitnessFunction, double initialVelocity, double finalVelocity, int VELOCITY_UPDATES) {
+    public static SimulationResult runWithCounter(FitnessFunction fitnessFunction, double initialVelocity, double finalVelocity, int VELOCITY_UPDATES, List<SwarmInformation> swarmInformations) {
         int cnt = 0;
-        //TODO swarmInformations should be passed as a parameter
-        List<SwarmInformation> swarmInformations = SwarmUtils.createSwarmInfoList(particles);
 
         MultiSwarm multiSwarm = new MultiSwarm(swarmInformations, fitnessFunction);
-
         SwarmUtils.setMultiSwarmParameters(multiSwarm,cnt / 5, 0.95,20);
-
         multiSwarm.setVelocityFunction(new LinearVelocityFunction(initialVelocity, finalVelocity).setUpdatesCnt(VELOCITY_UPDATES).setUpdatesInterval(NUMBER_OF_ITERATIONS / VELOCITY_UPDATES));
         multiSwarm.init();
 
         List<Double> partial = new ArrayList<Double>(NUMBER_OF_ITERATIONS / 100);
 
-        for (int i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
-            // Evolve swarm
-            multiSwarm.evolve();
-
-            //display partial results
-            if (NUMBER_OF_ITERATIONS > 100 && (i % (NUMBER_OF_ITERATIONS / 100) == 0)) {
-                partial.add(multiSwarm.getBestFitness());
-                System.out.println(multiSwarm.getBestFitness());
-            }
-        }
+        evolveAndDisplay(multiSwarm, partial);
 
         //print final results
         System.out.println(multiSwarm.getBestFitness());
@@ -116,6 +103,19 @@ public abstract class RunUtils {
                 .setSwarmInformations(SwarmUtils.getSwarmEntityList(swarmInformations))
                 .setInitialVelocity(initialVelocity)
                 .setFinalVelocity(finalVelocity).build();
+    }
+
+    public static void evolveAndDisplay(MultiSwarm multiSwarm, List<Double> partial){
+        for (int i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
+            // Evolve swarm
+            multiSwarm.evolve();
+
+            //display partial results
+            if (NUMBER_OF_ITERATIONS > 100 && (i % (NUMBER_OF_ITERATIONS / 100) == 0)) {
+                partial.add(multiSwarm.getBestFitness());
+                System.out.println(multiSwarm.getBestFitness());
+            }
+        }
     }
 
 
@@ -156,7 +156,7 @@ public abstract class RunUtils {
                 .build();
     }
 
-    public static void generateOutputFile(int[] speciesArray, FitnessFunction fitnessFunction, SimulationResult result) throws IOException {
+    public static void generateOutputFile(SimulationResult result) throws IOException {
         SimulationOutput output = null;
         try {
             output = new SimulationOutputOk(result);

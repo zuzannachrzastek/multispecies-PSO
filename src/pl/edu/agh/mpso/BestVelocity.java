@@ -19,6 +19,7 @@ import pl.edu.agh.mpso.species.SpeciesType;
 import pl.edu.agh.mpso.swarm.MultiSwarm;
 import pl.edu.agh.mpso.swarm.SwarmInformation;
 import pl.edu.agh.mpso.utils.RunUtils;
+import pl.edu.agh.mpso.utils.SwarmUtils;
 import pl.edu.agh.mpso.velocity.LinearVelocityFunction;
 
 /**
@@ -104,56 +105,9 @@ public class BestVelocity {
 			}
 		}
 
-		SimulationResult result = RunUtils.runWithCounter(speciesArray, fitnessFunction, initialVelocity, finalVelocity, VELOCITY_UPDATES);
-		RunUtils.generateOutputFile(speciesArray, fitnessFunction, result);
-	}
+		List<SwarmInformation> swarmInformations = SwarmUtils.createSwarmInfoList(speciesArray);
 
-	private static SimulationResult run(List<SwarmInformation> swarmInformations, FitnessFunction fitnessFunction) {
-		MultiSwarm multiSwarm = new MultiSwarm(swarmInformations, fitnessFunction);
-
-		Neighborhood neighbourhood = new Neighborhood1D(multiSwarm.getNumberOfParticles() / 5, true);
-		multiSwarm.setNeighborhood(neighbourhood);
-
-
-		multiSwarm.setNeighborhoodIncrement(0.9);
-		multiSwarm.setInertia(0.95);
-		multiSwarm.setParticleIncrement(0.9);
-		multiSwarm.setGlobalIncrement(0.9);
-
-		multiSwarm.setMaxPosition(MAX_POS);
-		multiSwarm.setMinPosition(-MAX_POS);
-
-		multiSwarm.setVelocityFunction(new LinearVelocityFunction(initialVelocity, finalVelocity).setUpdatesCnt(VELOCITY_UPDATES).setUpdatesInterval(NUMBER_OF_ITERATIONS / VELOCITY_UPDATES));
-		multiSwarm.init();
-
-		List<Double> partial = new ArrayList<Double>(NUMBER_OF_ITERATIONS / 100);
-
-		for(int i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
-			// Evolve swarm
-			multiSwarm.evolve();
-
-			//display partial results
-			if(NUMBER_OF_ITERATIONS > 100 && (i % (NUMBER_OF_ITERATIONS / 100) == 0)){
-				partial.add(multiSwarm.getBestFitness());
-				System.out.println(multiSwarm.getBestFitness());
-			}
-		}
-
-		//print final results
-		System.out.println(multiSwarm.getBestFitness());
-
-		//create output.json
-		SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();
-		return builder.setFitnessFunction(fitnessFunction.getClass().getName())
-				.setIterations(NUMBER_OF_ITERATIONS)
-				.setDimensions(NUMBER_OF_DIMENSIONS)
-				.setPartial(partial)
-				.setBestFitness(multiSwarm.getBestFitness())
-				.setTotalParticles(NUMBER_OF_PARTICLES)
-				.setSwarmInformations(swarmInformations.stream()
-						.map(a -> new SwarmInfoEntity(a.getNumberOfParticles(), a.getType().getType()))
-						.collect(Collectors.toList()))
-				.setInitialVelocity(initialVelocity)
-				.setFinalVelocity(finalVelocity).build();
+		SimulationResult result = RunUtils.runWithCounter(fitnessFunction, initialVelocity, finalVelocity, VELOCITY_UPDATES, swarmInformations);
+		RunUtils.generateOutputFile(result);
 	}
 }

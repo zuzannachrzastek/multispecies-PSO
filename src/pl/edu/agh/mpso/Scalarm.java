@@ -105,17 +105,8 @@ public class Scalarm {
 		multiSwarm.setMinPosition(-100);
 		
 		List<Double> partial = new ArrayList<Double>(NUMBER_OF_ITERATIONS / 100);
-		
-		for(int i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
-			// Evolve swarm
-			multiSwarm.evolve();
-			
-			//display partial results
-			if(NUMBER_OF_ITERATIONS > 100 && (i % (NUMBER_OF_ITERATIONS / 100) == 0)){
-				partial.add(multiSwarm.getBestFitness());
-				System.out.println(multiSwarm.getBestFitness());
-			}
-		}
+
+		RunUtils.evolveAndDisplay(multiSwarm, partial);
 		
 		//print final results
 		System.out.println(multiSwarm.getBestFitness());
