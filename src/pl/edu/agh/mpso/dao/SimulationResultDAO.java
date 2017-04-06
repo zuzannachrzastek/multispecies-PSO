@@ -157,13 +157,13 @@ public class SimulationResultDAO {
         docBuilder.append("totalParticles", result.getTotalParticles());
 
         Document[] documents = new Document[result.getSwarmInformations().size()];
+        result.getSwarmInformations().forEach(swarmInfoEntity -> System.out.println(swarmInfoEntity.toString()));
         for (int i = 0; i < result.getSwarmInformations().size(); i++) {
             Document swarmInfos = new Document();
             swarmInfos.append("numberOfParticles", result.getSwarmInformations().get(i).getNumberOfParticles());
             swarmInfos.append("type", result.getSwarmInformations().get(i).getType());
-            documents[i++] = swarmInfos;
+            documents[i] = swarmInfos;
         }
-        System.out.println(documents);
         docBuilder.append("swarmInformations", documents);
         docBuilder.append("initialVelocity", result.getInitialVelocity());
         docBuilder.append("finalVelocity", result.getFinalVelocity());

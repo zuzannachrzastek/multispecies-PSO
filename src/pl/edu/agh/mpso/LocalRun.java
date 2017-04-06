@@ -33,8 +33,8 @@ public class LocalRun {
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, IOException, InterruptedException {
 		FitnessFunction fitnessFunction = new Schwefel();
 		NUMBER_OF_DIMENSIONS = 100;
-		NUMBER_OF_ITERATIONS = 3000;
-		int executions = 30;
+		NUMBER_OF_ITERATIONS = 10;
+		int executions = 10;
 		
         List<SwarmInformation> species = new ArrayList<>();
         species.add(new SwarmInformation(1, SpeciesType.ALL));

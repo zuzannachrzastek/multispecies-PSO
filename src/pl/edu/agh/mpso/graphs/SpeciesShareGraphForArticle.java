@@ -55,12 +55,12 @@ public class SpeciesShareGraphForArticle {
 
         for (SimulationResult result : results) {
             for (int cnt : counts) {
-//                if (meetsCriteria(result, speciesId, cnt)) {
+                if (meetsCriteria(result, speciesId, cnt)) {
                     filteredResults.get(cnt).add(result.getPartial());
 //                    System.out.println(cnt + result.getPartial().toString());
                     filteredQuality.get(cnt).add(result.getBestFitness());
-//                    break;
-//                }
+                    break;
+                }
             }
 
         }
@@ -171,10 +171,16 @@ public class SpeciesShareGraphForArticle {
 
 	private static boolean meetsCriteria(SimulationResult result, int speciesId, int speciesCnt){
 		try {
+//            System.out.println(result.getSwarmInformations());
+//            return true;
+            List<SwarmInfoEntity> collect = result.getSwarmInformations().stream()
+                    .filter(swarmInfoEntity -> swarmInfoEntity.getType() == speciesId)
+                    .collect(Collectors.toList());
+            int speciesNo = 0;
+            if (!collect.isEmpty())
+                speciesNo = collect.get(0).getType();
             return result.getTotalParticles() == NUMBER_OF_PARTICLES &&
-                    result.getSwarmInformations().stream()
-                            .filter(swarmInfoEntity -> swarmInfoEntity.getType() == speciesId)
-                            .collect(Collectors.toList()).get(0).getNumberOfParticles() == speciesCnt;
+                    speciesNo == speciesCnt;
 		} catch (Exception e) {
             e.printStackTrace();
 			return false;

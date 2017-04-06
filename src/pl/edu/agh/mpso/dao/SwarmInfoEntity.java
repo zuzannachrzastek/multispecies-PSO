@@ -41,4 +41,13 @@ public class SwarmInfoEntity implements Serializable {
     public void setType(int type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "SwarmInfoEntity{" +
+                "numberOfParticles=" + numberOfParticles +
+                ", type=" + type +
+                ", id='" + id + '\'' +
+                '}';
+    }
 }
