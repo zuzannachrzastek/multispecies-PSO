@@ -27,7 +27,7 @@ public class SpeciesShareGraphForArticle {
     private final static int totalParticles = 25;
     private final static int NUMBER_OF_SPECIES = SpeciesType.values().length;
 
-	private final static int [] counts = new int[] {0, 4, 11, 18, 25};
+	private final static int [] counts = new int[] {0, 4, 11, 15, 25};
 
     private static Map<Integer, List<List<Double>>> filteredResults = new HashMap<>();
     private static Map<Integer, List<Double>> filteredQuality = new HashMap<>();
@@ -55,12 +55,12 @@ public class SpeciesShareGraphForArticle {
 
         for (SimulationResult result : results) {
             for (int cnt : counts) {
-                if (meetsCriteria(result, speciesId, cnt)) {
+//                if (meetsCriteria(result, speciesId, cnt)) {
                     filteredResults.get(cnt).add(result.getPartial());
-                    System.out.println(cnt + result.getPartial().toString());
+//                    System.out.println(cnt + result.getPartial().toString());
                     filteredQuality.get(cnt).add(result.getBestFitness());
-                    break;
-                }
+//                    break;
+//                }
             }
 
         }

@@ -71,7 +71,7 @@ public abstract class RunUtils {
         evolveAndDisplay(multiSwarm, partial);
 
         //print final results
-        System.out.println(multiSwarm.getBestFitness());
+//        System.out.println(multiSwarm.getBestFitness());
 
         //create output.json
         SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();
@@ -94,7 +94,7 @@ public abstract class RunUtils {
             //display partial results
             if (NUMBER_OF_ITERATIONS > 100 && (i % (NUMBER_OF_ITERATIONS / 100) == 0)) {
                 partial.add(multiSwarm.getBestFitness());
-                System.out.println("best fitness: " + multiSwarm.getBestFitness());
+//                System.out.println("best fitness: " + multiSwarm.getBestFitness());
             }
         }
     }

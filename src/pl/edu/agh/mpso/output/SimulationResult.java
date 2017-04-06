@@ -6,7 +6,7 @@ import pl.edu.agh.mpso.swarm.SwarmInformation;
 import java.io.Serializable;
 import java.util.List;
 
-public class SimulationResult implements Serializable{
+public class SimulationResult {
     private String fitnessFunction;
     private double bestFitness;
     private int dimensions;
@@ -23,7 +23,8 @@ public class SimulationResult implements Serializable{
     private String orderFunction;
     private String shiftFunction;
 
-    public SimulationResult(){}
+    public SimulationResult() {
+    }
 
     private SimulationResult(String fitnessFunction, double bestFitness, int dimensions, int iterations, List<Double> partial, int totalParticles, List<SwarmInfoEntity> swarmInformations, double initialVelocity, double finalVelocity, String orderFunction, String shiftFunction) {
         this.fitnessFunction = fitnessFunction;
@@ -43,69 +44,92 @@ public class SimulationResult implements Serializable{
         return new SimulationResultBuilder();
     }
 
-    public double getBestFitness() {
-        return bestFitness;
-    }
-
-    public List<Double> getPartial() {
-        return partial;
-    }
-
-    public int getTotalParticles() {
-        return totalParticles;
-    }
-
-    public String getOrderFunction() {
-        return orderFunction;
-    }
-
-    public String getShiftFunction() {
-        return shiftFunction;
-    }
-
-    public List<SwarmInfoEntity> getSwarmInformations() {
-        return swarmInformations;
-    }
-
-
     public String getFitnessFunction() {
         return fitnessFunction;
-    }
-
-    public int getDimensions() {
-        return dimensions;
-    }
-
-    public int getIterations() {
-        return iterations;
-    }
-
-    public double getInitialVelocity() {
-        return initialVelocity;
-    }
-
-    public double getFinalVelocity() {
-        return finalVelocity;
     }
 
     public void setFitnessFunction(String fitnessFunction) {
         this.fitnessFunction = fitnessFunction;
     }
 
+    public double getBestFitness() {
+        return bestFitness;
+    }
+
     public void setBestFitness(double bestFitness) {
         this.bestFitness = bestFitness;
+    }
+
+    public int getDimensions() {
+        return dimensions;
     }
 
     public void setDimensions(int dimensions) {
         this.dimensions = dimensions;
     }
 
+    public int getIterations() {
+        return iterations;
+    }
+
     public void setIterations(int iterations) {
         this.iterations = iterations;
     }
 
+    public List<Double> getPartial() {
+        return partial;
+    }
+
     public void setPartial(List<Double> partial) {
         this.partial = partial;
+    }
+
+    public int getTotalParticles() {
+        return totalParticles;
+    }
+
+    public void setTotalParticles(int totalParticles) {
+        this.totalParticles = totalParticles;
+    }
+
+    public List<SwarmInfoEntity> getSwarmInformations() {
+        return swarmInformations;
+    }
+
+    public void setSwarmInformations(List<SwarmInfoEntity> swarmInformations) {
+        this.swarmInformations = swarmInformations;
+    }
+
+    public double getInitialVelocity() {
+        return initialVelocity;
+    }
+
+    public void setInitialVelocity(double initialVelocity) {
+        this.initialVelocity = initialVelocity;
+    }
+
+    public double getFinalVelocity() {
+        return finalVelocity;
+    }
+
+    public void setFinalVelocity(double finalVelocity) {
+        this.finalVelocity = finalVelocity;
+    }
+
+    public String getOrderFunction() {
+        return orderFunction;
+    }
+
+    public void setOrderFunction(String orderFunction) {
+        this.orderFunction = orderFunction;
+    }
+
+    public String getShiftFunction() {
+        return shiftFunction;
+    }
+
+    public void setShiftFunction(String shiftFunction) {
+        this.shiftFunction = shiftFunction;
     }
 
     public static class SimulationResultBuilder {
