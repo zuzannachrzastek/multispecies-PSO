@@ -42,7 +42,7 @@ public class SpeciesShareGraphForArticle {
         SimulationResultDAO dao = SimulationResultDAO.getInstance();
         List<SimulationResult> results = dao.getResults(PACKAGE + "." + fitnessFunction, dimensions, iterations, totalParticles);
         dao.close();
-        System.out.println("Results loaded");
+        System.out.println("Results loaded"+results.size());
 
 
         System.out.println("Filtering results");
@@ -65,7 +65,7 @@ public class SpeciesShareGraphForArticle {
 
         }
 
-        System.out.println("Preparing chart data");
+        System.out.println("Preparing chart data"+filteredResults.size());
 
         Chart<List<Point>> chart =
                 new ScatterChart(22, 22, 16, 16)
@@ -171,14 +171,14 @@ public class SpeciesShareGraphForArticle {
 
 	private static boolean meetsCriteria(SimulationResult result, int speciesId, int speciesCnt){
 		try {
-//            System.out.println(result.getSwarmInformations());
-//            return true;
             List<SwarmInfoEntity> collect = result.getSwarmInformations().stream()
                     .filter(swarmInfoEntity -> swarmInfoEntity.getType() == speciesId)
                     .collect(Collectors.toList());
-            int speciesNo = 0;
-            if (!collect.isEmpty())
-                speciesNo = collect.get(0).getType();
+            int speciesNo = -1;
+            if (!collect.isEmpty()) {
+                speciesNo = collect.get(0).getNumberOfParticles();
+            }
+            System.out.println("speciesID"+speciesId+"speciesCNT"+speciesCnt+(speciesNo == speciesCnt)+collect+"TO"+result.getTotalParticles());
             return result.getTotalParticles() == NUMBER_OF_PARTICLES &&
                     speciesNo == speciesCnt;
 		} catch (Exception e) {

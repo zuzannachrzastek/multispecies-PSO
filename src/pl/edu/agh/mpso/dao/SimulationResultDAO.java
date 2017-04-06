@@ -59,12 +59,11 @@ public class SimulationResultDAO {
         DBCursor cursor = mongoDatabase.getCollection(COLLECTION_NAME).find(query);
         List<SimulationResult> results = new ArrayList<SimulationResult>();
 
-        System.out.println("AAAAAAAAAAAA");
         while (cursor.hasNext()){
             DBObject next = cursor.next();
             BasicDBList documents = (BasicDBList) next.get("swarmInformations");
             List<SwarmInfoEntity> swarmInfos = new ArrayList<>();
-            System.out.println(documents+"size"+documents.size());
+//            System.out.println(documents+"size"+documents.size());
             for (int i = 0; i < documents.size(); i++) {
                 if (documents.get(i) != null){
                     BasicDBObject s = (BasicDBObject) documents.get(i);
@@ -157,7 +156,6 @@ public class SimulationResultDAO {
         docBuilder.append("totalParticles", result.getTotalParticles());
 
         Document[] documents = new Document[result.getSwarmInformations().size()];
-        result.getSwarmInformations().forEach(swarmInfoEntity -> System.out.println(swarmInfoEntity.toString()));
         for (int i = 0; i < result.getSwarmInformations().size(); i++) {
             Document swarmInfos = new Document();
             swarmInfos.append("numberOfParticles", result.getSwarmInformations().get(i).getNumberOfParticles());
