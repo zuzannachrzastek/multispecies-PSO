@@ -34,15 +34,60 @@ public class LocalRun {
 		FitnessFunction fitnessFunction = new Schwefel();
 		NUMBER_OF_DIMENSIONS = 100;
 		NUMBER_OF_ITERATIONS = 3000;
-		int executions = 30;
+		int executions = 20;
 		
         List<SwarmInformation> species = new ArrayList<>();
-        species.add(new SwarmInformation(1, SpeciesType.ALL));
-        species.add(new SwarmInformation(4, SpeciesType.GLOBAL_AND_LOCAL));
-        species.add(new SwarmInformation(5, SpeciesType.LOCAL_AND_NEIGHBOUR));
-        for (int i = 0; i < 15; i++) {
-            species.add(new SwarmInformation(new SpeciesType(7)));
-        }
+
+//        species.add(new SwarmInformation(3, SpeciesType.ALL));
+//        species.add(new SwarmInformation(3, SpeciesType.GLOBAL_AND_LOCAL));
+//        species.add(new SwarmInformation(3, SpeciesType.GLOBAL_AND_NEIGHBOUR));
+//        species.add(new SwarmInformation(3, SpeciesType.LOCAL_AND_NEIGHBOUR));
+//        species.add(new SwarmInformation(0, SpeciesType.GLOBAL_ONLY));
+//        species.add(new SwarmInformation(4, SpeciesType.LOCAL_ONLY));
+//        species.add(new SwarmInformation(4, SpeciesType.NEIGHBOUR_ONLY));
+//
+//        for (int i = 0; i < 4; i++) {
+//            species.add(new SwarmInformation(SpeciesType.RANDOM));
+//        }
+
+//        species.add(new SwarmInformation(3, SpeciesType.ALL));
+//        species.add(new SwarmInformation(3, SpeciesType.GLOBAL_AND_LOCAL));
+//        species.add(new SwarmInformation(3, SpeciesType.GLOBAL_AND_NEIGHBOUR));
+//        species.add(new SwarmInformation(3, SpeciesType.LOCAL_AND_NEIGHBOUR));
+//        species.add(new SwarmInformation(4, SpeciesType.GLOBAL_ONLY));
+//        species.add(new SwarmInformation(3, SpeciesType.LOCAL_ONLY));
+//        species.add(new SwarmInformation(3, SpeciesType.NEIGHBOUR_ONLY));
+//
+//        for (int i = 0; i < 3; i++) {
+//            species.add(new SwarmInformation(SpeciesType.RANDOM));
+//        }
+
+//        species.add(new SwarmInformation(2, SpeciesType.ALL));
+//        species.add(new SwarmInformation(2, SpeciesType.GLOBAL_AND_LOCAL));
+//        species.add(new SwarmInformation(2, SpeciesType.GLOBAL_AND_NEIGHBOUR));
+//        species.add(new SwarmInformation(2, SpeciesType.LOCAL_AND_NEIGHBOUR));
+//        species.add(new SwarmInformation(11, SpeciesType.GLOBAL_ONLY));
+//        species.add(new SwarmInformation(2, SpeciesType.LOCAL_ONLY));
+//        species.add(new SwarmInformation(2, SpeciesType.NEIGHBOUR_ONLY));
+//
+//        for (int i = 0; i < 2; i++) {
+//            species.add(new SwarmInformation(SpeciesType.RANDOM));
+//        }
+
+//        species.add(new SwarmInformation(2, SpeciesType.ALL));
+//        species.add(new SwarmInformation(2, SpeciesType.GLOBAL_AND_LOCAL));
+//        species.add(new SwarmInformation(2, SpeciesType.GLOBAL_AND_NEIGHBOUR));
+//        species.add(new SwarmInformation(1, SpeciesType.LOCAL_AND_NEIGHBOUR));
+//        species.add(new SwarmInformation(15, SpeciesType.GLOBAL_ONLY));
+//        species.add(new SwarmInformation(1, SpeciesType.LOCAL_ONLY));
+//        species.add(new SwarmInformation(1, SpeciesType.NEIGHBOUR_ONLY));
+//
+//        for (int i = 0; i < 1; i++) {
+//            species.add(new SwarmInformation(SpeciesType.RANDOM));
+//        }
+
+        species.add(new SwarmInformation(25, SpeciesType.GLOBAL_ONLY));
+
 
 		RunUtils.runParallel(0, fitnessFunction, species, executions);
 	}

@@ -7,10 +7,7 @@ import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -32,7 +29,7 @@ public class ScatterChart extends Chart<List<Point>>{
 	private int yAxisValuesSizes = 0; // 0 means default size
 
 	public ScatterChart(){
-		data = new HashMap<String, List<Point>>();
+		data = new TreeMap<String, List<Point>>();
 	}
 
 	public ScatterChart(int xAxisLabelSize, int yAxisLabelSize, int xAxisValuesSizes, int yAxisValuesSizes) {
@@ -48,7 +45,6 @@ public class ScatterChart extends Chart<List<Point>>{
 		data.put(name, values);
 		return this;
 	}
-	
 	public Chart<List<Point>> addToSeries(String name, Point value){
 		if(!data.containsKey(name)){
 			data.put(name, new ArrayList<Point>());
