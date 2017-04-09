@@ -1,15 +1,5 @@
 package pl.edu.agh.mpso.graphs;
 
-import static pl.edu.agh.mpso.Simulation.NUMBER_OF_PARTICLES;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import pl.edu.agh.mpso.chart.Chart;
 import pl.edu.agh.mpso.chart.Point;
 import pl.edu.agh.mpso.chart.ScatterChart;
@@ -17,17 +7,28 @@ import pl.edu.agh.mpso.dao.SimulationResultDAO;
 import pl.edu.agh.mpso.dao.SwarmInfoEntity;
 import pl.edu.agh.mpso.output.SimulationResult;
 import pl.edu.agh.mpso.species.SpeciesType;
-import pl.edu.agh.mpso.swarm.SwarmInformation;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static pl.edu.agh.mpso.Simulation.NUMBER_OF_PARTICLES;
 
 public class SpeciesShareGraphForArticle {
     private static final String PACKAGE = "pl.edu.agh.mpso.fitness";
-    private static final String fitnessFunction = "Schwefel";
+    private static final String fitnessFunction = "Rastrigin";
     private final static int dimensions = 100;
     private final static int iterations = 3000;
     private final static int totalParticles = 25;
     private final static int NUMBER_OF_SPECIES = SpeciesType.values().length;
 
-	private final static int [] counts = new int[] {0, 4, 11, 15, 25};
+    private final static int[] counts = new int[]{0, 4, 8, 18, 25};
 
     private static Map<Integer, List<List<Double>>> filteredResults = new HashMap<>();
     private static Map<Integer, List<Double>> filteredQuality = new HashMap<>();
@@ -42,7 +43,7 @@ public class SpeciesShareGraphForArticle {
         SimulationResultDAO dao = SimulationResultDAO.getInstance();
         List<SimulationResult> results = dao.getResults(PACKAGE + "." + fitnessFunction, dimensions, iterations, totalParticles);
         dao.close();
-        System.out.println("Results loaded"+results.size());
+        System.out.println("Results loaded" + results.size());
 
 
         System.out.println("Filtering results");
@@ -65,7 +66,7 @@ public class SpeciesShareGraphForArticle {
 
         }
 
-        System.out.println("Preparing chart data"+filteredResults.size());
+        System.out.println("Preparing chart data" + filteredResults.size());
 
         Chart<List<Point>> chart =
                 new ScatterChart(22, 22, 16, 16)
@@ -169,22 +170,18 @@ public class SpeciesShareGraphForArticle {
         return (double) Math.round(a * 100) / 100;
     }
 
-	private static boolean meetsCriteria(SimulationResult result, int speciesId, int speciesCnt){
-		try {
+    private static boolean meetsCriteria(SimulationResult result, int speciesId, int speciesCnt) {
+        try {
             List<SwarmInfoEntity> collect = result.getSwarmInformations().stream()
                     .filter(swarmInfoEntity -> swarmInfoEntity.getType() == speciesId)
                     .collect(Collectors.toList());
-            int speciesNo = -1;
-            if (!collect.isEmpty()) {
-                speciesNo = collect.get(0).getNumberOfParticles();
-            }
-            System.out.println("speciesID"+speciesId+"speciesCNT"+speciesCnt+(speciesNo == speciesCnt)+collect+"TO"+result.getTotalParticles());
-            return result.getTotalParticles() == NUMBER_OF_PARTICLES &&
-                    speciesNo == speciesCnt;
-		} catch (Exception e) {
+            int speciesNo = collect.isEmpty() ? 0 : collect.get(0).getNumberOfParticles();
+
+            return result.getTotalParticles() == NUMBER_OF_PARTICLES && speciesNo == speciesCnt;
+        } catch (Exception e) {
             e.printStackTrace();
-			return false;
-		}
-	}
+            return false;
+        }
+    }
 
 }

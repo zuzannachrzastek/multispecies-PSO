@@ -37,10 +37,14 @@ public class LocalRun {
 		int executions = 30;
 		
         List<SwarmInformation> species = new ArrayList<>();
-        species.add(new SwarmInformation(1, SpeciesType.ALL));
-        species.add(new SwarmInformation(4, SpeciesType.GLOBAL_AND_LOCAL));
-        species.add(new SwarmInformation(5, SpeciesType.LOCAL_AND_NEIGHBOUR));
-        for (int i = 0; i < 15; i++) {
+//        species.add(new SwarmInformation(1, SpeciesType.ALL));
+//        species.add(new SwarmInformation(1, SpeciesType.GLOBAL_AND_LOCAL));
+//        species.add(new SwarmInformation(1, SpeciesType.GLOBAL_AND_NEIGHBOUR));
+//        species.add(new SwarmInformation(1, SpeciesType.LOCAL_AND_NEIGHBOUR));
+//        species.add(new SwarmInformation(1, SpeciesType.GLOBAL_ONLY));
+//        species.add(new SwarmInformation(1, SpeciesType.LOCAL_ONLY));
+//        species.add(new SwarmInformation(1, SpeciesType.NEIGHBOUR_ONLY));
+        for (int i = 0; i < 25; i++) {
             species.add(new SwarmInformation(new SpeciesType(7)));
         }
 

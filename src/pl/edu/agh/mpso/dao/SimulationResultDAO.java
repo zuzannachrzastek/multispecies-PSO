@@ -1,9 +1,6 @@
 package pl.edu.agh.mpso.dao;
 
 import com.mongodb.*;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import pl.edu.agh.mpso.output.SimulationResult;
 
@@ -59,15 +56,14 @@ public class SimulationResultDAO {
         DBCursor cursor = mongoDatabase.getCollection(COLLECTION_NAME).find(query);
         List<SimulationResult> results = new ArrayList<SimulationResult>();
 
-        while (cursor.hasNext()){
+        while (cursor.hasNext()) {
             DBObject next = cursor.next();
             BasicDBList documents = (BasicDBList) next.get("swarmInformations");
             List<SwarmInfoEntity> swarmInfos = new ArrayList<>();
-//            System.out.println(documents+"size"+documents.size());
             for (int i = 0; i < documents.size(); i++) {
-                if (documents.get(i) != null){
+                if (documents.get(i) != null) {
                     BasicDBObject s = (BasicDBObject) documents.get(i);
-                    swarmInfos.add(new SwarmInfoEntity((int)s.get("numberOfParticles"), (int)s.get("type")));
+                    swarmInfos.add(new SwarmInfoEntity((int) s.get("numberOfParticles"), (int) s.get("type")));
                 }
             }
             SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();

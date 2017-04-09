@@ -12,7 +12,7 @@ public class SpeciesType {
     public static final SpeciesType NEIGHBOUR_ONLY = new SpeciesType(6, 0.0, 0.0, 1.0);
     public static final SpeciesType RANDOM = new SpeciesType(7);
 
-    public final int type;
+    private final int type;
     private final Color color;
 
     private static final String[] typeNames = new String[]{
@@ -40,7 +40,7 @@ public class SpeciesType {
         this.neighbour = 3.0 - global - local;
         int rgb = 255 / (8 - type);
         this.color = new Color(rgb, rgb, rgb);
-        System.out.println(global+","+ local+","+ neighbour+","+type);
+        System.out.println(global + "," + local + "," + neighbour + "," + type);
 
     }
 
@@ -62,7 +62,7 @@ public class SpeciesType {
     }
 
     public static SpeciesType[] values() {
-        return new SpeciesType[]{ALL, GLOBAL_AND_LOCAL, GLOBAL_AND_NEIGHBOUR, LOCAL_AND_NEIGHBOUR, GLOBAL_ONLY, LOCAL_ONLY, NEIGHBOUR_ONLY,RANDOM};
+        return new SpeciesType[]{ALL, GLOBAL_AND_LOCAL, GLOBAL_AND_NEIGHBOUR, LOCAL_AND_NEIGHBOUR, GLOBAL_ONLY, LOCAL_ONLY, NEIGHBOUR_ONLY, RANDOM};
     }
 
 }
