@@ -36,8 +36,7 @@ public abstract class RunUtils {
 
     public static void runParallel(final int id, final FitnessFunction fitnessFunction, final int executions, final int[] speciesShares, final int speciesId) throws InterruptedException {
         Thread thread = new Thread(() -> {
-            for (int share :
-                    speciesShares) {
+            for (int share : speciesShares) {
                 System.out.println("Species " + speciesId + " share " + share);
 
                 List<SwarmInformation> speciesArray = new ArrayList<>();

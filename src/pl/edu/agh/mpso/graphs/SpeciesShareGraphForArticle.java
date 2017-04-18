@@ -28,13 +28,13 @@ public class SpeciesShareGraphForArticle {
     private final static int totalParticles = 25;
     private final static int NUMBER_OF_SPECIES = SpeciesType.values().length;
 
-    private final static int[] counts = new int[]{0, 4, 8, 18, 25};
+    private final static int[] counts = new int[]{0, 4, 11, 18, 25};
 
     private static Map<Integer, List<List<Double>>> filteredResults = new HashMap<>();
     private static Map<Integer, List<Double>> filteredQuality = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
-        for (int i = 1; i <= NUMBER_OF_SPECIES; i++) getPartialsForSpecies(i);
+        for (int i = 0; i < NUMBER_OF_SPECIES; i++) getPartialsForSpecies(i);
     }
 
 
@@ -63,7 +63,6 @@ public class SpeciesShareGraphForArticle {
                     break;
                 }
             }
-
         }
 
         System.out.println("Preparing chart data" + filteredResults.size());
@@ -114,7 +113,7 @@ public class SpeciesShareGraphForArticle {
         PrintWriter stdWriter = new PrintWriter(new FileOutputStream(stdCsvFile, true));
 //		writer.append("Count,Average Quality,Standard Deviation\n");
 
-        avgWriter.append(SpeciesType.values()[speciesId - 1].toString() + ",");
+        avgWriter.append(SpeciesType.values()[speciesId].toString() + ",");
 
         for (int i = 0; i < counts.length; i++) {
             List<Double> values = filteredQuality.get(counts[i]);
