@@ -5,6 +5,6 @@ package pl.edu.agh.mpso.utils;
  */
 public class ExecutionParameters {
     public static final int SEARCH_SPACE_SIZE = 20;
-    public static final int SIZE = 7;
+    public static final int NEIGHBOURHOOD_SIZE = 7;
     public static final double INERTIA = 0.95;
 }

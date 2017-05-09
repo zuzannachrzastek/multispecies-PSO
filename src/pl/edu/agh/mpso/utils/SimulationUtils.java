@@ -27,7 +27,7 @@ public class SimulationUtils {
             long tic = System.currentTimeMillis();
 
             MultiSwarm multiSwarm = new MultiSwarm(speciesArray, fitnessFunction);
-            SimulationResult result = RunUtils.run(multiSwarm, speciesArray, fitnessFunction, INERTIA, SEARCH_SPACE_SIZE, SIZE);
+            SimulationResult result = RunUtils.run(multiSwarm, speciesArray, fitnessFunction, INERTIA, SEARCH_SPACE_SIZE, NEIGHBOURHOOD_SIZE);
 
             long toc = System.currentTimeMillis();
             long diff = toc - tic;

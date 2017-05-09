@@ -28,8 +28,8 @@ public class SwarmUtils {
         return multiSwarm;
     }
 
-    public static void setMultiSwarmParameters(MultiSwarm multiSwarm, int size, double inertia, double searchSpaceSize) {
-        Neighborhood neighbourhood = new Neighborhood1D(size, true);
+    public static void setMultiSwarmParameters(MultiSwarm multiSwarm, int neighbourhoodSize, double inertia, double searchSpaceSize) {
+        Neighborhood neighbourhood = new Neighborhood1D(neighbourhoodSize, true);
         multiSwarm.setNeighborhood(neighbourhood);
 
         multiSwarm.setInertia(inertia);

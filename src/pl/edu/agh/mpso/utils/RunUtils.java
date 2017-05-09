@@ -145,9 +145,9 @@ public abstract class RunUtils {
     }
 
 
-    public static SimulationResult run(MultiSwarm multiSwarm, List<SwarmInformation> particles, FitnessFunction fitnessFunction, double inertia, int searchSpaceSize, int size) {
+    public static SimulationResult run(MultiSwarm multiSwarm, List<SwarmInformation> particles, FitnessFunction fitnessFunction, double inertia, int searchSpaceSize, int neighbourhoodSize) {
 
-        SwarmUtils.setMultiSwarmParameters(multiSwarm, size, inertia, searchSpaceSize);
+        SwarmUtils.setMultiSwarmParameters(multiSwarm, neighbourhoodSize, inertia, searchSpaceSize);
 
         multiSwarm.setOrderFunction(new DefaultOrderFunction());
         multiSwarm.setShiftFunction(new DefaultShiftFunction());
