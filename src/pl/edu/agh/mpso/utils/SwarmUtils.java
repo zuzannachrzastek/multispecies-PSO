@@ -8,9 +8,12 @@ import pl.edu.agh.mpso.species.SpeciesType;
 import pl.edu.agh.mpso.swarm.MultiSwarm;
 import pl.edu.agh.mpso.swarm.SwarmInformation;
 
+import java.security.Policy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static pl.edu.agh.mpso.utils.ExecutionParameters.*;
 
 /**
  * Created by Zuzanna on 3/31/2017.
@@ -33,9 +36,9 @@ public class SwarmUtils {
         multiSwarm.setNeighborhood(neighbourhood);
 
         multiSwarm.setInertia(inertia);
-        multiSwarm.setNeighborhoodIncrement(0.9);
-        multiSwarm.setParticleIncrement(0.9);
-        multiSwarm.setGlobalIncrement(0.9);
+        multiSwarm.setNeighborhoodIncrement(NEIGHBOURHOOD_INCREMENT);
+        multiSwarm.setParticleIncrement(PARTICLE_INCREMENT);
+        multiSwarm.setGlobalIncrement(GLOBAL_INCREMENT);
 
         multiSwarm.setMaxPosition(searchSpaceSize);
         multiSwarm.setMinPosition(-searchSpaceSize);
