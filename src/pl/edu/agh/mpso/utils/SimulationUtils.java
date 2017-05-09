@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static pl.edu.agh.mpso.Simulation.NUMBER_OF_ITERATIONS;
+import static pl.edu.agh.mpso.utils.ExecutionParameters.*;
 
 /**
  * Created by Zuzanna on 4/5/2017.
@@ -26,7 +27,7 @@ public class SimulationUtils {
             long tic = System.currentTimeMillis();
 
             MultiSwarm multiSwarm = new MultiSwarm(speciesArray, fitnessFunction);
-            SimulationResult result = RunUtils.run(multiSwarm, speciesArray, fitnessFunction, 0.95, 20, 7);
+            SimulationResult result = RunUtils.run(multiSwarm, speciesArray, fitnessFunction, INERTIA, SEARCH_SPACE_SIZE, SIZE);
 
             long toc = System.currentTimeMillis();
             long diff = toc - tic;
