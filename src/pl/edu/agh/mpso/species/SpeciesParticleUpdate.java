@@ -41,13 +41,14 @@ public class SpeciesParticleUpdate extends ParticleUpdate {
             double inspireDirection = 0;
             SpeciesType[] speciesToInspire = type.getSpeciesToInspire();
 
-            List<SwarmInformation> infos = ((MultiSwarm)swarm).getSwarmInfos();
+            List<SwarmInformation> infos = ((MultiSwarm) swarm).getSwarmInfos();
             if (speciesToInspire.length == 0) {
                 inspireDirection = globalIncrement * weights[0] * (globalBest[i] - position[i]);
             } else {
                 for (SpeciesType type : speciesToInspire) {
                     for (SwarmInformation swarmInformation : infos) {
-                        inspireDirection += globalIncrement * weights[0] * (swarmInformation.getBestPosition()[i] - position[i]);
+                        if (swarmInformation.getType().getType() == type.getType())
+                            inspireDirection += globalIncrement * weights[0] * (swarmInformation.getBestPosition()[i] - position[i]);
                     }
                 }
 
@@ -55,7 +56,6 @@ public class SpeciesParticleUpdate extends ParticleUpdate {
             }
 
             velocity[i] = swarm.getInertia() * velocity[i] + inspireDirection
-                    + globalIncrement * weights[0] * (globalBest[i] - position[i])
                     + localIncrement * weights[1] * (localBest[i] - position[i])
                     + neighbourhoodInrement * weights[2] * (neighbourhoodBest[i] - position[i]);
         }
