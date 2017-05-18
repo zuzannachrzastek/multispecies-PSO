@@ -19,7 +19,7 @@ public class SpeciesType {
             "Normal", "Global and local", "Global and neighbour", "Local and neighbour",
             "Global only", "Local only", "Neighbour only", "Random weights"
     };
-    private final SpeciesType[] speciesToInspire;
+    private SpeciesType[] speciesToInspire;
     private double global;
     private double local;
     private double neighbour;
@@ -68,6 +68,10 @@ public class SpeciesType {
 
     public static SpeciesType[] values() {
         return new SpeciesType[]{ALL, GLOBAL_AND_LOCAL, GLOBAL_AND_NEIGHBOUR, LOCAL_AND_NEIGHBOUR, GLOBAL_ONLY, LOCAL_ONLY, NEIGHBOUR_ONLY, RANDOM};
+    }
+
+    public void setSpeciesToInspire(SpeciesType[] speciesToInspire) {
+        this.speciesToInspire = speciesToInspire;
     }
 
     public SpeciesType[] getSpeciesToInspire() {
