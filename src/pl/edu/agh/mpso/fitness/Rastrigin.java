@@ -3,7 +3,7 @@ package pl.edu.agh.mpso.fitness;
 import net.sourceforge.jswarm_pso.FitnessFunction;
 
 public class Rastrigin extends FitnessFunction{
-	private final int A = 5;
+	private final int A = 10;
 	
 	public Rastrigin() {
 		super(false);
@@ -15,10 +15,10 @@ public class Rastrigin extends FitnessFunction{
 	
 	@Override
 	public double evaluate(double[] position) {
-		double result = position.length * A;
+		double result = 0;
 		
 		for(double x : position){
-			result += x * x - A * Math.cos(2 * Math.PI * x);
+			result += x * x - A * Math.cos(2 * Math.PI * x) + A;
 		}
 		
 		return result;

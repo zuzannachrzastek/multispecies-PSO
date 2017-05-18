@@ -20,7 +20,7 @@ public class Schwefel extends FitnessFunction{
     public double evaluate(double[] position) {
         double d = position.length;
         double sumOfXSinSqrtX = calculateSumOfXSinSqrtX(position);
-        return 418.9829 * d - sumOfXSinSqrtX;
+        return  -sumOfXSinSqrtX;
     }
 
     private double calculateSumOfXSinSqrtX(double[] position) {

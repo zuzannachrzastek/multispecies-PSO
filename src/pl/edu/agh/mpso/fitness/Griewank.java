@@ -25,7 +25,7 @@ public class Griewank extends FitnessFunction{
         double result = 1;
         int i = 1;
         for (double pos : position) {
-            result *= cos(pos / sqrt(i));
+            result *= cos(pos / sqrt(i + 1));
             i++;
         }
         return result;

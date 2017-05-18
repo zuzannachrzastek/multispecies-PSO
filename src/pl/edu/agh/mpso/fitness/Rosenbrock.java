@@ -17,9 +17,11 @@ public class Rosenbrock extends FitnessFunction{
     @Override
     public double evaluate(double[] position) {
         double result = 0;
-        for (int i = 0; i < position.length - 1; i++) {
-            result += Math.pow(A - position[i], 2)
-                      + B * Math.pow(position[i+1] - Math.pow(position[i], 2), 2);
+        for (int i = 0; i < position.length - A; i++) {
+            result += B * Math.pow(position[i+1] - Math.pow(position[i], 2), 2)
+             + Math.pow(position[i] - 1, 2);
+//            result += Math.pow(A - position[i], 2)
+//                      + B * Math.pow(position[i+1] - Math.pow(position[i], 2), 2);
         }
         return result;
     }
