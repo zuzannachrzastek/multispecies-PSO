@@ -15,9 +15,9 @@ public class Ackley extends FitnessFunction {
     private final static double B = 0.2;
 
     private final static double C = 2 * Math.PI;
-    
-    public Ackley(){
-    	super(false);
+
+    public Ackley() {
+        super(false);
     }
 
     @Override
@@ -26,9 +26,13 @@ public class Ackley extends FitnessFunction {
         double sumOfSquaredPos = calculateSumOfSquared(position);
         double sumOfCosPos = calculateSumOfCos(position);
 
-        return -A * exp(-B * sqrt((1/d) * sumOfSquaredPos))
-               -exp((1/d) * sumOfCosPos)
-               + A + exp(1);
+        //w sumie to jest to samo, ale latwiej bylo mi zrozumiec taki zapis :P
+
+        return A + Math.E - A * exp(-B * sqrt(1 / d) * sumOfSquaredPos) - exp((1 / d) * sumOfCosPos);
+
+//        return -A * exp(-B * sqrt((1/d) * sumOfSquaredPos))
+//               -exp((1/d) * sumOfCosPos)
+//               + A + exp(1);
     }
 
     private double calculateSumOfCos(double[] position) {
