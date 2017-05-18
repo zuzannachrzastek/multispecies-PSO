@@ -103,7 +103,7 @@ public class Comparison {
 
                 //TODO random
                 if (i == 7)
-                    type = new SpeciesType(7);
+                    type = new SpeciesType(7, new SpeciesType[]{});
                 SwarmInformation swarmInformation = new SwarmInformation(particles[i], type);
 
                 swarmInformations.add(swarmInformation);

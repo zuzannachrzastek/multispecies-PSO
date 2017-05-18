@@ -66,6 +66,10 @@ public class MultiSwarm extends Swarm {
         return shiftFunction;
     }
 
+    public List<SwarmInformation> getSwarmInfos() {
+        return swarmInfos;
+    }
+
     @Override
     public void init() {
         // Init particles

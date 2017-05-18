@@ -6,7 +6,7 @@ import static pl.edu.agh.mpso.Simulation.NUMBER_OF_ITERATIONS;
 import java.io.IOException;
 
 import net.sourceforge.jswarm_pso.FitnessFunction;
-import pl.edu.agh.mpso.fitness.Schwefel;
+import pl.edu.agh.mpso.fitness.*;
 import pl.edu.agh.mpso.species.SpeciesType;
 import pl.edu.agh.mpso.swarm.SwarmInformation;
 
@@ -31,9 +31,9 @@ import pl.edu.agh.mpso.utils.RunUtils;
 public class LocalRun {
 
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, IOException, InterruptedException {
-		FitnessFunction fitnessFunction = new Schwefel();
-		NUMBER_OF_DIMENSIONS = 100;
-		NUMBER_OF_ITERATIONS = 3000;
+		FitnessFunction fitnessFunction = new Rastrigin();
+		NUMBER_OF_DIMENSIONS = 13;
+		NUMBER_OF_ITERATIONS = 100;
 		int executions = 30;
 		
         List<SwarmInformation> species = new ArrayList<>();
@@ -86,7 +86,7 @@ public class LocalRun {
 //            species.add(new SwarmInformation(SpeciesType.RANDOM));
 //        }
 
-        species.add(new SwarmInformation(25, SpeciesType.GLOBAL_ONLY));
+        species.add(new SwarmInformation(30, SpeciesType.GLOBAL_AND_LOCAL));
 
 
 		RunUtils.runParallel(0, fitnessFunction, species, executions);
