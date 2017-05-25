@@ -88,9 +88,9 @@
 //
 //    //TODO return SwarmInformations
 //    private static int[] getSpeciesConfiguration(SimulationResult result) {
-//        return new int[]{ result.getSpecies1(), result.getSpecies2(), result.getSpecies3(),
-//                                     result.getSpecies4(), result.getSpecies5(), result.getSpecies6(),
-//                                     result.getSpecies7(), result.getSpecies8()};
+////        return new int[]{ result.getSpecies1(), result.getSpecies2(), result.getSpecies3(),
+////                                     result.getSpecies4(), result.getSpecies5(), result.getSpecies6(),
+////                                     result.getSpecies7(), result.getSpecies8()};
 //    }
 //
 //    private static double average(List<Double> values){

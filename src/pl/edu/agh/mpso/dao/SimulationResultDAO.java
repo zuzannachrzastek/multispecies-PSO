@@ -54,6 +54,20 @@ public class SimulationResultDAO {
 
         System.out.println("query: " + query.toString());
 
+        return executeQuery(fitnessFunction, dimensions, iterations, totalParticles, query);
+    }
+
+    public List<SimulationResult> getResultsByLabel(String fitnessFunction, int dimensions, int iterations, int totalParticles, String label) {
+        BasicDBObject query = new BasicDBObject("fitnessFunction", fitnessFunction)
+                .append("dimensions", dimensions).append("iterations", iterations)
+                .append("totalParticles", totalParticles).append("label", label);
+
+        System.out.println("query: " + query.toString());
+
+        return executeQuery(fitnessFunction, dimensions, iterations, totalParticles, query);
+    }
+
+    public List<SimulationResult> executeQuery(String fitnessFunction, int dimensions, int iterations, int totalParticles, BasicDBObject query){
         DBCursor cursor = mongoDatabase.getCollection(COLLECTION_NAME).find(query);
         List<SimulationResult> results = new ArrayList<SimulationResult>();
 

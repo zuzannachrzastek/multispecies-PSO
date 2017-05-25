@@ -31,7 +31,7 @@ import pl.edu.agh.mpso.utils.RunUtils;
 public class LocalRun {
 
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, IOException, InterruptedException {
-		FitnessFunction fitnessFunction = new Parabola();
+		FitnessFunction fitnessFunction = new Ackley();
 		NUMBER_OF_DIMENSIONS = 2;
 		NUMBER_OF_ITERATIONS = 100;
 		int executions = 30;
