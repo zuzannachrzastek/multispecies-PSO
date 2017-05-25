@@ -101,6 +101,6 @@ public class LocalRun {
 //        species.add(new SwarmInformation(30, SpeciesType.GLOBAL_AND_LOCAL));
 
 
-		RunUtils.runParallel(0, fitnessFunction, species, executions);
+        RunUtils.runParallel(0, fitnessFunction, species, executions);
 	}
 }

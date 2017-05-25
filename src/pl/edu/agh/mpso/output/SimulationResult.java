@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class SimulationResult {
+    private String label;
     private String fitnessFunction;
     private double bestFitness;
     private int dimensions;
@@ -26,7 +27,8 @@ public class SimulationResult {
     public SimulationResult() {
     }
 
-    private SimulationResult(String fitnessFunction, double bestFitness, int dimensions, int iterations, List<Double> partial, int totalParticles, List<SwarmInfoEntity> swarmInformations, double initialVelocity, double finalVelocity, String orderFunction, String shiftFunction) {
+    public SimulationResult(String label, String fitnessFunction, double bestFitness, int dimensions, int iterations, List<Double> partial, int totalParticles, List<SwarmInfoEntity> swarmInformations, double initialVelocity, double finalVelocity, String orderFunction, String shiftFunction) {
+        this.label = label;
         this.fitnessFunction = fitnessFunction;
         this.bestFitness = bestFitness;
         this.dimensions = dimensions;
@@ -132,7 +134,16 @@ public class SimulationResult {
         this.shiftFunction = shiftFunction;
     }
 
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
     public static class SimulationResultBuilder {
+        private String label;
         private String fitnessFunction;
         private double bestFitness;
         private int dimensions;
@@ -149,6 +160,11 @@ public class SimulationResult {
         private String shiftFunction;
 
         public SimulationResultBuilder() {
+        }
+
+        public SimulationResultBuilder setLabel(String label) {
+            this.label = label;
+            return this;
         }
 
         public SimulationResultBuilder setFitnessFunction(String fitnessFunction) {
@@ -207,7 +223,7 @@ public class SimulationResult {
         }
 
         public SimulationResult build() {
-            return new SimulationResult(fitnessFunction, bestFitness, dimensions, iterations, partial, totalParticles, swarmInformations, initialVelocity, finalVelocity, orderFunction, shiftFunction);
+            return new SimulationResult(label, fitnessFunction, bestFitness, dimensions, iterations, partial, totalParticles, swarmInformations, initialVelocity, finalVelocity, orderFunction, shiftFunction);
         }
     }
 }

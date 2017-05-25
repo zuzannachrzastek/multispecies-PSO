@@ -3,6 +3,7 @@ package pl.edu.agh.mpso.dao;
 import com.mongodb.*;
 import org.bson.Document;
 import pl.edu.agh.mpso.output.SimulationResult;
+import pl.edu.agh.mpso.utils.ExecutionParameters;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,6 +69,7 @@ public class SimulationResultDAO {
             }
             SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();
             SimulationResult result = builder.setFitnessFunction(fitnessFunction)
+                    .setLabel(ExecutionParameters.LABEL)
                     .setIterations(iterations)
                     .setDimensions(dimensions)
                     .setPartial((List<Double>) next.get("partial"))
@@ -77,6 +79,7 @@ public class SimulationResultDAO {
                     .setOrderFunction((String) next.get("orderFunction"))
                     .setShiftFunction((String) next.get("shiftFunction"))
                     .build();
+            System.out.println("Current experiment label: " + result.getLabel());
             results.add(result);
         }
 
@@ -144,6 +147,7 @@ public class SimulationResultDAO {
     private static DBObject createDBObject(SimulationResult result) {
         BasicDBObjectBuilder docBuilder = BasicDBObjectBuilder.start();
 
+        docBuilder.append("label", result.getLabel());
         docBuilder.append("fitnessFunction", result.getFitnessFunction());
         docBuilder.append("bestFitness", result.getBestFitness());
         docBuilder.append("dimensions", result.getDimensions());

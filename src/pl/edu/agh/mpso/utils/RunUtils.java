@@ -42,8 +42,8 @@ public abstract class RunUtils {
                 List<SwarmInformation> speciesArray = new ArrayList<>();
 
                 int numberOfParticles = 0;
-                for(int speciesType = 0; speciesType < SpeciesType.values().length; speciesType++){
-                    if(speciesType == speciesId){
+                for (int speciesType = 0; speciesType < SpeciesType.values().length; speciesType++) {
+                    if (speciesType == speciesId) {
                         numberOfParticles = share;
                     } else {
                         numberOfParticles = (NUMBER_OF_PARTICLES - share) / (SpeciesType.values().length - 1);
@@ -68,12 +68,11 @@ public abstract class RunUtils {
     private static void addSwarmInformation(int numberOfParticles, List<SwarmInformation> speciesArray, int speciesType) {
         if (numberOfParticles <= 0)
             return;
-        if (speciesType == SpeciesType.RANDOM.getType()){
+        if (speciesType == SpeciesType.RANDOM.getType()) {
             for (int i = 0; i < numberOfParticles; i++) {
                 speciesArray.add(new SwarmInformation(new SpeciesType(SpeciesType.RANDOM.getType())));
             }
-        }
-        else {
+        } else {
             speciesArray.add(new SwarmInformation(numberOfParticles, SpeciesType.values()[speciesType]));
         }
     }
@@ -161,7 +160,8 @@ public abstract class RunUtils {
 
         //create output.json
         SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();
-        return builder.setFitnessFunction(fitnessFunction.getClass().getName())
+        SimulationResult result = builder.setFitnessFunction(fitnessFunction.getClass().getName())
+                .setLabel(ExecutionParameters.LABEL)
                 .setIterations(NUMBER_OF_ITERATIONS)
                 .setDimensions(NUMBER_OF_DIMENSIONS)
                 .setPartial(partial)
@@ -171,5 +171,7 @@ public abstract class RunUtils {
                 .setOrderFunction(multiSwarm.getOrderFunction().getClass().getSimpleName())
                 .setShiftFunction(multiSwarm.getShiftFunction().getClass().getSimpleName())
                 .build();
+        System.out.println("Current experiment label: " + result.getLabel());
+        return result;
     }
 }
