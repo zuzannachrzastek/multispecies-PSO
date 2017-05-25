@@ -136,10 +136,10 @@ public abstract class RunUtils {
             multiSwarm.evolve();
 
             //display partial results
-            if (NUMBER_OF_ITERATIONS > 100 && (i % (NUMBER_OF_ITERATIONS / 100) == 0)) {
+//            if (NUMBER_OF_ITERATIONS > 100 && (i % (NUMBER_OF_ITERATIONS / 100) == 0)) {
                 partial.add(multiSwarm.getBestFitness());
 //                System.out.println("best fitness: " + multiSwarm.getBestFitness());
-            }
+//            }
         }
     }
 

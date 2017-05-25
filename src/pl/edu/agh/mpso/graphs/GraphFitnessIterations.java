@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static pl.edu.agh.mpso.Simulation.NUMBER_OF_PARTICLES;
+import static pl.edu.agh.mpso.utils.ExecutionParameters.*;
 
 /**
  * Created by Zuzanna on 5/25/2017.
@@ -30,8 +31,8 @@ public class GraphFitnessIterations {
     private final static int iterations = 3000;
     private final static int totalParticles = 25;
     private final static int NUMBER_OF_SPECIES = SpeciesType.values().length;
-    private final static String labelStandard = "PSO::2017.05.25::17:25";
-    private final static String labelModified = "PSO::2017.05.25::17:26";
+    private final static String labelStandard = "PSO::2017.05.25::18:04";
+    private final static String labelModified = "PSO::2017.05.25::18:09";
 
     private final static int[] counts = new int[]{0, 4, 11, 18, 25};
 
@@ -61,19 +62,6 @@ public class GraphFitnessIterations {
             filteredQuality.put(cnt, bestQuality);
         }
 
-//        for (SimulationResult result : results) {
-//            for (int cnt : counts) {
-//                if (result.getSwarmInformations().stream().filter()) {
-//                    filteredResults.get(cnt).add(result.getPartial());
-////                    System.out.println(cnt + result.getPartial().toString());
-//                    filteredQuality.get(cnt).add(result.getBestFitness());
-//                    break;
-//                }
-//            }
-//        }
-
-        System.out.println("Preparing chart data" + filteredResults.size());
-
         Chart<List<Point>> chart =
                 new ScatterChart(22, 22, 16, 16)
                         //.setTitle("PSO " + fitnessFunction + " optimizing, ")
@@ -81,30 +69,9 @@ public class GraphFitnessIterations {
                         .setYAxisTitle("Quality")
                         .setLogScale()
                         .setFileFormat("pdf");
-
         int minExecutions = Integer.MAX_VALUE;
-
-        List<Point> points = new ArrayList<Point>();
-
-//        List<List<Double>> valuesList = filteredResults.get(cnt);
-//        if (valuesList.size() < minExecutions) minExecutions = valuesList.size();
-
-//        for (int i = 1; i < 100; i++) {
-//            //count average
-//            double sum = 0.0;
-//
-//            for (List<Double> values : valuesList) {
-//                sum += values.get(i);
-//            }
-//
-//            double x = iterations * i / 100;
-//            double y = sum / valuesList.size();
-//            points.add(new Point(x, y));
-//        }
-
-        System.out.println(resultsStandard);
-
-        chart.addSeries(labelStandard, points);
+        chart.addSeries(labelStandard, addData(resultsStandard, chart, minExecutions));
+        chart.addSeries(labelModified, addData(resultsStandard, chart, minExecutions));
 
         String path = "thesis2/share/" + fitnessFunction;
         String suffix = "" + speciesId + "_" + totalParticles + "_" + dimensions + "_" + iterations + "_" + minExecutions;
@@ -146,6 +113,36 @@ public class GraphFitnessIterations {
 
         stdWriter.close();
         avgWriter.close();
+    }
+
+    private static List<Point> addData(List<SimulationResult> resultsStandard, Chart<List<Point>> chart, int minExecutions) {
+        List<List<Double>> partial = resultsStandard.stream().map(SimulationResult::getPartial).collect(Collectors.toList());
+
+
+        System.out.println("Preparing chart data" + partial.size());
+
+
+        List<Point> points = new ArrayList<Point>();
+
+//        List<List<Double>> valuesList = partial;
+        if (partial.size() < minExecutions) minExecutions = partial.size();
+
+        for (int i = 1; i < EXECUTIONS; i++) {
+            //count average
+            double sum = 0.0;
+
+            for (List<Double> values : partial) {
+                sum += values.get(i);
+            }
+
+            double x = iterations * i / 100;
+            double y = sum / partial.size();
+            points.add(new Point(x, y));
+        }
+
+
+
+        return points;
     }
 
     private static double average(List<Double> values) {

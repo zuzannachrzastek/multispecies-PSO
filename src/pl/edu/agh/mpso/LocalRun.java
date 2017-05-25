@@ -16,6 +16,8 @@ import java.util.List;
 
 import static pl.edu.agh.mpso.Simulation.NUMBER_OF_DIMENSIONS;
 import static pl.edu.agh.mpso.Simulation.NUMBER_OF_ITERATIONS;
+
+import pl.edu.agh.mpso.utils.ExecutionParameters;
 import pl.edu.agh.mpso.utils.RunUtils;
 
 /**
@@ -31,11 +33,10 @@ import pl.edu.agh.mpso.utils.RunUtils;
 public class LocalRun {
 
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, IOException, InterruptedException {
-		FitnessFunction fitnessFunction = new Ackley();
+		FitnessFunction fitnessFunction = new Rastrigin();
 		NUMBER_OF_DIMENSIONS = 2;
 		NUMBER_OF_ITERATIONS = 100;
-		int executions = 30;
-		
+
         List<SwarmInformation> species = new ArrayList<>();
 
 //        species.add(new SwarmInformation(3, SpeciesType.ALL));
@@ -101,6 +102,6 @@ public class LocalRun {
 //        species.add(new SwarmInformation(30, SpeciesType.GLOBAL_AND_LOCAL));
 
 
-        RunUtils.runParallel(0, fitnessFunction, species, executions);
+        RunUtils.runParallel(0, fitnessFunction, species, ExecutionParameters.EXECUTIONS);
 	}
 }

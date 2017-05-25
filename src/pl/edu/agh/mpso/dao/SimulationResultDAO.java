@@ -58,9 +58,7 @@ public class SimulationResultDAO {
     }
 
     public List<SimulationResult> getResultsByLabel(String fitnessFunction, int dimensions, int iterations, int totalParticles, String label) {
-        BasicDBObject query = new BasicDBObject("fitnessFunction", fitnessFunction)
-                .append("dimensions", dimensions).append("iterations", iterations)
-                .append("totalParticles", totalParticles).append("label", label);
+        BasicDBObject query = new BasicDBObject("label", label);
 
         System.out.println("query: " + query.toString());
 
@@ -93,7 +91,6 @@ public class SimulationResultDAO {
                     .setOrderFunction((String) next.get("orderFunction"))
                     .setShiftFunction((String) next.get("shiftFunction"))
                     .build();
-            System.out.println("Current experiment label: " + result.getLabel());
             results.add(result);
         }
 
