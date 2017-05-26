@@ -166,7 +166,7 @@ public abstract class RunUtils {
                 .setDimensions(NUMBER_OF_DIMENSIONS)
                 .setPartial(partial)
                 .setBestFitness(multiSwarm.getBestFitness())
-                .setTotalParticles(NUMBER_OF_PARTICLES)
+                .setTotalParticles(multiSwarm.getNumberOfParticles())
                 .setSwarmInformations(SwarmUtils.getSwarmEntityList(particles))
                 .setOrderFunction(multiSwarm.getOrderFunction().getClass().getSimpleName())
                 .setShiftFunction(multiSwarm.getShiftFunction().getClass().getSimpleName())

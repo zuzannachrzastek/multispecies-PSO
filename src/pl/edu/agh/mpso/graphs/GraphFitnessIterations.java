@@ -31,7 +31,7 @@ public class GraphFitnessIterations {
     private final static int iterations = 3000;
     private final static int totalParticles = 25;
     private final static int NUMBER_OF_SPECIES = SpeciesType.values().length;
-    private final static String labelStandard = "PSO::2017.05.26::10:23";
+    private final static String labelStandard = "PSO::2017.05.26::10:06";
     private final static String labelModified = "PSO::2017.05.25::18:09";
 
     private final static int[] counts = new int[]{0, 4, 11, 18, 25};
