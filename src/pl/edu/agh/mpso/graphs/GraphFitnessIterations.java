@@ -31,7 +31,7 @@ public class GraphFitnessIterations {
     private final static int iterations = 3000;
     private final static int totalParticles = 25;
     private final static int NUMBER_OF_SPECIES = SpeciesType.values().length;
-    private final static String labelStandard = "PSO::2017.05.25::18:04";
+    private final static String labelStandard = "PSO::2017.05.26::10:23";
     private final static String labelModified = "PSO::2017.05.25::18:09";
 
     private final static int[] counts = new int[]{0, 4, 11, 18, 25};
@@ -67,11 +67,11 @@ public class GraphFitnessIterations {
                         //.setTitle("PSO " + fitnessFunction + " optimizing, ")
                         .setXAxisTitle("Iterations")
                         .setYAxisTitle("Quality")
-                        .setLogScale()
+//                        .setLogScale()
                         .setFileFormat("pdf");
         int minExecutions = Integer.MAX_VALUE;
         chart.addSeries(labelStandard, addData(resultsStandard, chart, minExecutions));
-        chart.addSeries(labelModified, addData(resultsStandard, chart, minExecutions));
+        chart.addSeries(labelModified, addData(resultsModified, chart, minExecutions));
 
         String path = "thesis2/share/" + fitnessFunction;
         String suffix = "" + speciesId + "_" + totalParticles + "_" + dimensions + "_" + iterations + "_" + minExecutions;
