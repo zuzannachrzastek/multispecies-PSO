@@ -26,8 +26,8 @@ import static pl.edu.agh.mpso.utils.ExecutionParameters.ITERATIONS;
  */
 public class GraphFitnessIterations {
     private static final String PACKAGE = "pl.edu.agh.mpso.fitness";
-    private final static String labelStandard = "PSO_MODIFIED::2017.05.30::16:16";
-    private final static String labelModified = "PSO_MODIFIED::2017.05.30::16:15";
+    private final static String labelStandard = "PSO_STANDARD::2017.05.26::15:48";
+    private final static String labelModified = "PSO_MODIFIED::2017.05.26::15:50";
 
 //    private final static int[] counts = new int[]{0, 4, 11, 18, 25};
 
@@ -130,10 +130,9 @@ public class GraphFitnessIterations {
         System.out.println(transpose.get(0).toString());
         System.out.println(transpose.get(1).toString());
 
-        BoxAndWhiskers boxwhiskersChart = new BoxAndWhiskers("Box and whiskers", transpose);
-        boxwhiskersChart.pack();
-        RefineryUtilities.centerFrameOnScreen(boxwhiskersChart);
-        boxwhiskersChart.setVisible(true);
+        BoxAndWhiskers boxwhiskersChart = new BoxAndWhiskers();
+        boxwhiskersChart.addSeries(labelModified, transpose);
+        boxwhiskersChart.save("results/whatever" + ".pdf");
 
         for (int i = 0; i < ITERATIONS; i++) {
             //count average

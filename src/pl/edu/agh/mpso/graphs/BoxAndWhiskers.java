@@ -1,53 +1,27 @@
 package pl.edu.agh.mpso.graphs;
 
-import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.CategoryAxis;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.labels.BoxAndWhiskerToolTipGenerator;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
-import org.jfree.ui.ApplicationFrame;
+import pl.edu.agh.mpso.chart.Chart;
+import pl.edu.agh.mpso.chart.ChartSaveUtilities;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
-
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by Zuzanna on 5/30/2017.
  */
-public class BoxAndWhiskers extends ApplicationFrame{
+public class BoxAndWhiskers extends Chart<List<List<Double>>> {
 
-    public BoxAndWhiskers(String title, List<List<Double>> table) {
-        super(title);
-
-        final BoxAndWhiskerCategoryDataset dataset = createSampleDataset(table);
-
-        final CategoryAxis xAxis = new CategoryAxis("Type");
-        final NumberAxis yAxis = new NumberAxis("Value");
-        yAxis.setAutoRangeIncludesZero(false);
-        final BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
-        renderer.setFillBox(false);
-        renderer.setToolTipGenerator(new BoxAndWhiskerToolTipGenerator());
-        final CategoryPlot plot = new CategoryPlot(dataset, xAxis, yAxis, renderer);
-
-        final JFreeChart chart = new JFreeChart(
-                "Box-and-Whisker Demo",
-                new Font("SansSerif", Font.BOLD, 14),
-                plot,
-                true
-        );
-        final ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(450, 270));
-        setContentPane(chartPanel);
-    }
+    private Map<String, List<List<Double>>> data = new TreeMap<>();
 
     private BoxAndWhiskerCategoryDataset createSampleDataset(List<List<Double>> table) {
-
         int i = 0;
 
         final DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
@@ -55,8 +29,26 @@ public class BoxAndWhiskers extends ApplicationFrame{
         for(List<Double> list : table){
             dataset.add(list, "Series " + (i++), " Type ");
         }
+        
         return dataset;
+
     }
 
 
+    @Override
+    public Chart<List<List<Double>>> addSeries(String name, List<List<Double>> values) {
+        data.put(name, values);
+        return this;
+    }
+
+    @Override
+    protected void save(File file) throws IOException {
+        final BoxAndWhiskerCategoryDataset dataset = createSampleDataset(data.get(data.keySet().iterator().next()));
+
+        JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(title, xTitle, yTitle, dataset, false);
+        chart.getPlot().setBackgroundPaint(Color.WHITE);
+
+
+        ChartSaveUtilities.saveChart(file, chart, size[0], size[1]);
+    }
 }
