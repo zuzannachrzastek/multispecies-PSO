@@ -131,7 +131,7 @@ public class GraphFitnessIterations {
                 sum += values.get(i);
             }
 
-            double x = ITERATIONS * i;// / 100;
+            double x = ITERATIONS * i / 100;
             double y = sum / partial.size();
             points.add(new Point(x, y));
         }
