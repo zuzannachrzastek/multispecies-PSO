@@ -12,7 +12,6 @@ import pl.edu.agh.mpso.swarm.SwarmInformation;
 import java.io.IOException;
 import java.util.List;
 
-import static pl.edu.agh.mpso.Simulation.NUMBER_OF_ITERATIONS;
 import static pl.edu.agh.mpso.utils.ExecutionParameters.*;
 
 /**
@@ -60,7 +59,7 @@ public class SimulationUtils {
         multiSwarm.setAbsMaxVelocity(maxVelocity);
         multiSwarm.init();
 
-        for(int i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
+        for(int i = 0; i < ExecutionParameters.ITERATIONS; ++i) {
             // Evolve swarm
             multiSwarm.evolve();
         }

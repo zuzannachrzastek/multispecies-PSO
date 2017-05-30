@@ -74,19 +74,19 @@ public class LocalRun {
 //            species.add(new SwarmInformation(SpeciesType.RANDOM));
 //        }
 //
-        SpeciesType C4_A = SpeciesType.ALL;
-        SpeciesType C4_B = new SpeciesType(SpeciesType.ALL.getType());
-        SpeciesType C4_C = new SpeciesType(SpeciesType.GLOBAL_AND_LOCAL.getType(), new SpeciesType[]{C4_A, C4_B});
-        SpeciesType C4_D = new SpeciesType(SpeciesType.GLOBAL_AND_LOCAL.getType());
+//        SpeciesType C4_A = SpeciesType.ALL;
+//        SpeciesType C4_B = new SpeciesType(SpeciesType.ALL.getType());
+//        SpeciesType C4_C = new SpeciesType(SpeciesType.GLOBAL_AND_LOCAL.getType(), new SpeciesType[]{C4_A, C4_B});
+//        SpeciesType C4_D = new SpeciesType(SpeciesType.GLOBAL_AND_LOCAL.getType());
+//
+//        C4_B.setSpeciesToInspire(new SpeciesType[]{C4_C, C4_D});
+//
+//        species.add(new SwarmInformation(15, C4_A));
+//        species.add(new SwarmInformation(5, C4_B));
+//        species.add(new SwarmInformation(5, C4_C));
+//        species.add(new SwarmInformation(15, C4_D));
 
-        C4_B.setSpeciesToInspire(new SpeciesType[]{C4_C, C4_D});
-
-        species.add(new SwarmInformation(15, C4_A));
-        species.add(new SwarmInformation(5, C4_B));
-        species.add(new SwarmInformation(5, C4_C));
-        species.add(new SwarmInformation(15, C4_D));
-
-//        species.add(new SwarmInformation(40, SpeciesType.GLOBAL_AND_LOCAL));
+        species.add(new SwarmInformation(40, SpeciesType.GLOBAL_AND_LOCAL));
 
 
         RunUtils.runParallel(0, FITNESS_FUNCTION, species, EXECUTIONS);
