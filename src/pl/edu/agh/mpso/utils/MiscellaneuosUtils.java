@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Field;
 
-import static pl.edu.agh.mpso.Simulation.NUMBER_OF_PARTICLES;
-
 /**
  * Created by Zuzanna on 4/5/2017.
  */
@@ -39,7 +37,9 @@ public class MiscellaneuosUtils {
         try {
             Field speciesField = SimulationResult.class.getDeclaredField("species" + speciesId);
             int speciesFieldValue = (Integer) speciesField.get(result);
-            return result.getTotalParticles() == NUMBER_OF_PARTICLES && speciesFieldValue == speciesCnt;
+            return
+//                    result.getTotalParticles() == NUMBER_OF_PARTICLES &&
+                    speciesFieldValue == speciesCnt;
         } catch (Exception e) {
             return false;
         }

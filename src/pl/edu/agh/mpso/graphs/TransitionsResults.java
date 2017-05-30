@@ -9,9 +9,13 @@
 //import java.util.List;
 //import java.util.Map;
 //import java.util.Map.Entry;
+//import java.util.stream.Collectors;
 //
 //import pl.edu.agh.mpso.dao.SimulationResultDAO;
+//import pl.edu.agh.mpso.dao.SwarmInfoEntity;
 //import pl.edu.agh.mpso.output.SimulationResult;
+//
+//import static pl.edu.agh.mpso.Simulation.NUMBER_OF_PARTICLES;
 //
 //public class TransitionsResults {
 //    private static final String FITNESS_FUNCTION = "Styblinski";
@@ -77,7 +81,16 @@
 //
 //
 //    private static boolean meetsCriteria(int[][] spawnConfigurations, SimulationResult result) {
-//        final int[] speciesCount = getSpeciesConfiguration(result);
+////        final int[] speciesCount = getSpeciesConfiguration(result);
+//        List<SwarmInfoEntity> swarmInformations = result.getSwarmInformations();
+//        for (int[] spawnConfiguration: spawnConfigurations) {
+//            boolean check = false;
+//            for (int i = 0; i < spawnConfiguration.length; i++) {
+//                List<SwarmInfoEntity> collect = result.getSwarmInformations().stream()
+//                        .filter(x -> (x.getType() == i)).collect(Collectors.toList());
+//                check = check || spawnConfiguration[i] ==  (collect.isEmpty() ? 0 : collect.get(0).getNumberOfParticles());
+//            }
+//        }
 //        for (int[] spawnConfiguration : spawnConfigurations) {
 //            if (Arrays.equals(spawnConfiguration, speciesCount)) {
 //                return true;
@@ -86,12 +99,26 @@
 //        return false;
 //    }
 //
+//    private static boolean meetsCriteria(SimulationResult result, int speciesId, int speciesCnt) {
+//        try {
+//            List<SwarmInfoEntity> collect = result.getSwarmInformations().stream()
+//                    .filter(swarmInfoEntity -> swarmInfoEntity.getType() == speciesId)
+//                    .collect(Collectors.toList());
+//            int speciesNo = collect.isEmpty() ? 0 : collect.get(0).getNumberOfParticles();
+//
+//            return result.getTotalParticles() == NUMBER_OF_PARTICLES && speciesNo == speciesCnt;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 //    //TODO return SwarmInformations
-//    private static int[] getSpeciesConfiguration(SimulationResult result) {
+////    private static int[] getSpeciesConfiguration(SimulationResult result) {
+////        return result.getSwarmInformations();
 ////        return new int[]{ result.getSpecies1(), result.getSpecies2(), result.getSpecies3(),
 ////                                     result.getSpecies4(), result.getSpecies5(), result.getSpecies6(),
 ////                                     result.getSpecies7(), result.getSpecies8()};
-//    }
+////    }
 //
 //    private static double average(List<Double> values){
 //		double cnt = values.size();

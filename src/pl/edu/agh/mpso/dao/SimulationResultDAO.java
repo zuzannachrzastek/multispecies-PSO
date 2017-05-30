@@ -54,18 +54,18 @@ public class SimulationResultDAO {
 
         System.out.println("query: " + query.toString());
 
-        return executeQuery(fitnessFunction, dimensions, iterations, totalParticles, query);
+        return executeQuery(query);
     }
 
-    public List<SimulationResult> getResultsByLabel(String fitnessFunction, int dimensions, int iterations, int totalParticles, String label) {
+    public List<SimulationResult> getResultsByLabel(String label) {
         BasicDBObject query = new BasicDBObject("label", label);
 
         System.out.println("query: " + query.toString());
 
-        return executeQuery(fitnessFunction, dimensions, iterations, totalParticles, query);
+        return executeQuery(query);
     }
 
-    public List<SimulationResult> executeQuery(String fitnessFunction, int dimensions, int iterations, int totalParticles, BasicDBObject query){
+    public List<SimulationResult> executeQuery(BasicDBObject query){
         DBCursor cursor = mongoDatabase.getCollection(COLLECTION_NAME).find(query);
         List<SimulationResult> results = new ArrayList<SimulationResult>();
 
@@ -80,13 +80,13 @@ public class SimulationResultDAO {
                 }
             }
             SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();
-            SimulationResult result = builder.setFitnessFunction(fitnessFunction)
+            SimulationResult result = builder.setFitnessFunction((String) next.get("fitnessFunction"))
                     .setLabel(ExecutionParameters.LABEL)
-                    .setIterations(iterations)
-                    .setDimensions(dimensions)
+                    .setIterations((Integer) next.get("iterations"))
+                    .setDimensions((Integer) next.get("dimensions"))
                     .setPartial((List<Double>) next.get("partial"))
                     .setBestFitness((Double) next.get("bestFitness"))
-                    .setTotalParticles(totalParticles)
+                    .setTotalParticles((Integer) next.get("totalParticles"))
                     .setSwarmInformations(swarmInfos)
                     .setOrderFunction((String) next.get("orderFunction"))
                     .setShiftFunction((String) next.get("shiftFunction"))

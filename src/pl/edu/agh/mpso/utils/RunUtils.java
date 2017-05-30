@@ -12,7 +12,7 @@ import pl.edu.agh.mpso.velocity.LinearVelocityFunction;
 
 import java.util.*;
 
-import static pl.edu.agh.mpso.Simulation.*;
+import static pl.edu.agh.mpso.utils.ExecutionParameters.*;
 
 /**
  * Created by Zuzanna on 3/30/2017.
@@ -23,7 +23,7 @@ public abstract class RunUtils {
         Thread thread = new Thread(() -> {
             for (int i = 0; i < executions; i++) {
                 try {
-                    SimulationUtils.simulate(fitnessFunction, speciesArray, id, executions, i);
+                    SimulationUtils.simulate(fitnessFunction, speciesArray, id, ITERATIONS, i);
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
@@ -34,7 +34,8 @@ public abstract class RunUtils {
         thread.join();
     }
 
-    public static void runParallel(final int id, final FitnessFunction fitnessFunction, final int executions, final int[] speciesShares, final int speciesId) throws InterruptedException {
+    public static void runParallel(final int id, final FitnessFunction fitnessFunction, final int executions,
+                                   final int[] speciesShares, final int speciesId, int number_of_particles) throws InterruptedException {
         Thread thread = new Thread(() -> {
             for (int share : speciesShares) {
                 System.out.println("Species " + speciesId + " share " + share);
@@ -46,7 +47,7 @@ public abstract class RunUtils {
                     if (speciesType == speciesId) {
                         numberOfParticles = share;
                     } else {
-                        numberOfParticles = (NUMBER_OF_PARTICLES - share) / (SpeciesType.values().length - 1);
+                        numberOfParticles = (number_of_particles - share) / (SpeciesType.values().length - 1);
                     }
                     addSwarmInformation(numberOfParticles, speciesArray, speciesType);
                 }
@@ -104,13 +105,11 @@ public abstract class RunUtils {
     }
 
     public static SimulationResult runWithCounter(MultiSwarm multiSwarm, FitnessFunction fitnessFunction, double initialVelocity, double finalVelocity, int VELOCITY_UPDATES, List<SwarmInformation> swarmInformations, double inertia, int searchSpaceSize, int size) {
-        int cnt = 0;
-
         SwarmUtils.setMultiSwarmParameters(multiSwarm, size, inertia, searchSpaceSize);
-        multiSwarm.setVelocityFunction(new LinearVelocityFunction(initialVelocity, finalVelocity).setUpdatesCnt(VELOCITY_UPDATES).setUpdatesInterval(NUMBER_OF_ITERATIONS / VELOCITY_UPDATES));
+        multiSwarm.setVelocityFunction(new LinearVelocityFunction(initialVelocity, finalVelocity).setUpdatesCnt(VELOCITY_UPDATES).setUpdatesInterval(ITERATIONS / VELOCITY_UPDATES));
         multiSwarm.init();
 
-        List<Double> partial = new ArrayList<Double>(NUMBER_OF_ITERATIONS / 100);
+        List<Double> partial = new ArrayList<Double>(ITERATIONS);// / 100);
 
         evolveAndDisplay(multiSwarm, partial);
 
@@ -120,18 +119,18 @@ public abstract class RunUtils {
         //create output.json
         SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();
         return builder.setFitnessFunction(fitnessFunction.getClass().getName())
-                .setIterations(NUMBER_OF_ITERATIONS)
-                .setDimensions(NUMBER_OF_DIMENSIONS)
+                .setIterations(ITERATIONS)
+                .setDimensions(DIMENSIONS)
                 .setPartial(partial)
                 .setBestFitness(multiSwarm.getBestFitness())
-                .setTotalParticles(NUMBER_OF_PARTICLES)
+                .setTotalParticles(multiSwarm.getNumberOfParticles())
                 .setSwarmInformations(SwarmUtils.getSwarmEntityList(swarmInformations))
                 .setInitialVelocity(initialVelocity)
                 .setFinalVelocity(finalVelocity).build();
     }
 
     public static void evolveAndDisplay(MultiSwarm multiSwarm, List<Double> partial) {
-        for (int i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
+        for (int i = 0; i < ITERATIONS; ++i) {
             // Evolve swarm
             multiSwarm.evolve();
 
@@ -154,16 +153,16 @@ public abstract class RunUtils {
 //		multiSwarm.setAbsMaxVelocity(2.0);
         multiSwarm.init();
 
-        List<Double> partial = new ArrayList<Double>(NUMBER_OF_ITERATIONS / 100);
+        List<Double> partial = new ArrayList<>(ITERATIONS);// / 100);
 
         evolveAndDisplay(multiSwarm, partial);
 
         //create output.json
         SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();
         SimulationResult result = builder.setFitnessFunction(fitnessFunction.getClass().getName())
-                .setLabel(ExecutionParameters.LABEL)
-                .setIterations(NUMBER_OF_ITERATIONS)
-                .setDimensions(NUMBER_OF_DIMENSIONS)
+                .setLabel(LABEL)
+                .setIterations(ITERATIONS)
+                .setDimensions(DIMENSIONS)
                 .setPartial(partial)
                 .setBestFitness(multiSwarm.getBestFitness())
                 .setTotalParticles(multiSwarm.getNumberOfParticles())

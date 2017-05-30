@@ -9,6 +9,9 @@ import pl.edu.agh.mpso.Simulation;
 import pl.edu.agh.mpso.species.SpeciesParticle;
 import pl.edu.agh.mpso.species.SpeciesParticleUpdate;
 import pl.edu.agh.mpso.species.SpeciesType;
+import pl.edu.agh.mpso.utils.ExecutionParameters;
+
+import static pl.edu.agh.mpso.utils.ExecutionParameters.*;
 
 public class SwarmInformation {
 	
@@ -27,11 +30,11 @@ public class SwarmInformation {
 	}
 	
 	public SwarmInformation(int numberOfParticles, SpeciesType type){
-		this(numberOfParticles, new SpeciesParticle(type, Simulation.NUMBER_OF_DIMENSIONS));
+		this(numberOfParticles, new SpeciesParticle(type, DIMENSIONS));
 	}
 
 	public SwarmInformation(SpeciesType type){
-		this(1, new SpeciesParticle(type, Simulation.NUMBER_OF_DIMENSIONS));
+		this(1, new SpeciesParticle(type, DIMENSIONS));
 	}
 	
 	public SwarmInformation(int numberOfParticles, SpeciesType type, int dimensions){

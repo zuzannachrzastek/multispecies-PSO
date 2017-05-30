@@ -1,5 +1,6 @@
 package pl.edu.agh.mpso.graphs;
 
+import net.sourceforge.jswarm_pso.Swarm;
 import pl.edu.agh.mpso.chart.Chart;
 import pl.edu.agh.mpso.chart.Point;
 import pl.edu.agh.mpso.chart.ScatterChart;
@@ -18,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static pl.edu.agh.mpso.Simulation.NUMBER_OF_PARTICLES;
-
 public class SpeciesShareGraphForArticle {
     private static final String PACKAGE = "pl.edu.agh.mpso.fitness";
     private static final String fitnessFunction = "Rastrigin";
@@ -32,6 +31,7 @@ public class SpeciesShareGraphForArticle {
 
     private static Map<Integer, List<List<Double>>> filteredResults = new HashMap<>();
     private static Map<Integer, List<Double>> filteredQuality = new HashMap<>();
+    private static int NUMBER_OF_PARTICLES = Swarm.DEFAULT_NUMBER_OF_PARTICLES;
 
     public static void main(String[] args) throws IOException {
         for (int i = 0; i < NUMBER_OF_SPECIES; i++) getPartialsForSpecies(i);

@@ -4,7 +4,6 @@ import pl.edu.agh.mpso.chart.Chart;
 import pl.edu.agh.mpso.chart.Point;
 import pl.edu.agh.mpso.chart.ScatterChart;
 import pl.edu.agh.mpso.dao.SimulationResultDAO;
-import pl.edu.agh.mpso.dao.SwarmInfoEntity;
 import pl.edu.agh.mpso.output.SimulationResult;
 import pl.edu.agh.mpso.species.SpeciesType;
 
@@ -18,23 +17,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static pl.edu.agh.mpso.Simulation.NUMBER_OF_PARTICLES;
-import static pl.edu.agh.mpso.utils.ExecutionParameters.*;
+import static pl.edu.agh.mpso.utils.ExecutionParameters.ITERATIONS;
 
 /**
  * Created by Zuzanna on 5/25/2017.
  */
 public class GraphFitnessIterations {
     private static final String PACKAGE = "pl.edu.agh.mpso.fitness";
-    private static final String fitnessFunction = "Rastrigin";
-    private final static int dimensions = 100;
-    private final static int iterations = 3000;
-    private final static int totalParticles = 25;
-    private final static int NUMBER_OF_SPECIES = SpeciesType.values().length;
-    private final static String labelStandard = "PSO::2017.05.26::10:06";
-    private final static String labelModified = "PSO::2017.05.25::18:09";
+    private final static String labelStandard = "PSO_STANDARD::2017.05.26::15:48";
+    private final static String labelModified = "PSO_MODIFIED::2017.05.26::15:50";
 
-    private final static int[] counts = new int[]{0, 4, 11, 18, 25};
+//    private final static int[] counts = new int[]{0, 4, 11, 18, 25};
 
     private static Map<Integer, List<List<Double>>> filteredResults = new HashMap<>();
     private static Map<Integer, List<Double>> filteredQuality = new HashMap<>();
@@ -47,34 +40,34 @@ public class GraphFitnessIterations {
     private static void getPartialsForSpecies(int speciesId) throws IOException {
         System.out.println("Getting results");
         SimulationResultDAO dao = SimulationResultDAO.getInstance();
-        List<SimulationResult> resultsStandard = dao.getResultsByLabel(PACKAGE + "." + fitnessFunction, dimensions, iterations, totalParticles, labelStandard);
-        List<SimulationResult> resultsModified = dao.getResultsByLabel(PACKAGE + "." + fitnessFunction, dimensions, iterations, totalParticles, labelModified);
+        List<SimulationResult> resultsStandard = dao.getResultsByLabel(labelStandard);
+        List<SimulationResult> resultsModified = dao.getResultsByLabel(labelModified);
         dao.close();
         System.out.println("ResultsStandard loaded" + resultsStandard.size());
         System.out.println("ResultsModified loaded" + resultsModified.size());
 
 
         System.out.println("Filtering results");
-        for (int cnt : counts) {
-            List<List<Double>> partialResults = new ArrayList<List<Double>>();
-            filteredResults.put(cnt, partialResults);
-            List<Double> bestQuality = new ArrayList<Double>();
-            filteredQuality.put(cnt, bestQuality);
-        }
+//        for (int cnt : counts) {
+//            List<List<Double>> partialResults = new ArrayList<List<Double>>();
+//            filteredResults.put(cnt, partialResults);
+//            List<Double> bestQuality = new ArrayList<Double>();
+//            filteredQuality.put(cnt, bestQuality);
+//        }
 
         Chart<List<Point>> chart =
                 new ScatterChart(22, 22, 16, 16)
                         //.setTitle("PSO " + fitnessFunction + " optimizing, ")
                         .setXAxisTitle("Iterations")
                         .setYAxisTitle("Quality")
-//                        .setLogScale()
+                        .setLogScale()
                         .setFileFormat("pdf");
-        int minExecutions = Integer.MAX_VALUE;
-        chart.addSeries(labelStandard, addData(resultsStandard, chart, minExecutions));
-        chart.addSeries(labelModified, addData(resultsModified, chart, minExecutions));
+//        int minExecutions = Integer.MAX_VALUE;
+        chart.addSeries(labelStandard, addData(resultsStandard));
+        chart.addSeries(labelModified, addData(resultsModified));
 
-        String path = "thesis2/share/" + fitnessFunction;
-        String suffix = "" + speciesId + "_" + totalParticles + "_" + dimensions + "_" + iterations + "_" + minExecutions;
+//        String path = "thesis2/share/" + fitnessFunction;
+//        String suffix = "" + speciesId + "_" + totalParticles + "_" + dimensions + "_" + iterations + "_" + minExecutions;
 
         chart.save("results/" + speciesId + ".pdf");
 
@@ -88,21 +81,23 @@ public class GraphFitnessIterations {
 
         avgWriter.append(SpeciesType.values()[speciesId].toString() + ",");
 
-        for (int i = 0; i < counts.length; i++) {
-            List<Double> values = filteredQuality.get(counts[i]);
-            double avg = average(values);
-            double stD = standardDeviation(values, avg);
-            avgWriter.append("" + round(avg));
-            stdWriter.append("" + round(stD));
+        //TODO average and standard deviation
+        //http://www.java2s.com/Code/Java/Chart/JFreeChartBoxAndWhiskerDemo.htm
+//        for (int i = 0; i < counts.length; i++) {
+//            List<Double> values = filteredQuality.get(0);
+//            double avg = average(values);
+//            double stD = standardDeviation(values, avg);
+//            avgWriter.append("" + round(avg));
+//            stdWriter.append("" + round(stD));
 
-            if (i == counts.length - 1) {
-                avgWriter.append("\n");
-                stdWriter.append("\n");
-            } else {
-                avgWriter.append(",");
-                stdWriter.append(",");
-            }
-        }
+//            if (i == counts.length - 1) {
+//                avgWriter.append("\n");
+//                stdWriter.append("\n");
+//            } else {
+//                avgWriter.append(",");
+//                stdWriter.append(",");
+//            }
+//        }
 
 //		for(int cnt : counts){
 //			List<Double> values = filteredQuality.get(cnt);
@@ -111,31 +106,32 @@ public class GraphFitnessIterations {
 //			avgWriter.append("" + cnt + "," + round(avg) + "," + round(stD) + "\n");
 //		}
 
-        stdWriter.close();
-        avgWriter.close();
+//        stdWriter.close();
+//        avgWriter.close();
     }
 
-    private static List<Point> addData(List<SimulationResult> resultsStandard, Chart<List<Point>> chart, int minExecutions) {
-        List<List<Double>> partial = resultsStandard.stream().map(SimulationResult::getPartial).collect(Collectors.toList());
+    private static List<Point> addData(List<SimulationResult> results) {
+        List<List<Double>> partial = results.stream().map(SimulationResult::getPartial).collect(Collectors.toList());
 
 
         System.out.println("Preparing chart data" + partial.size());
 
 
-        List<Point> points = new ArrayList<Point>();
+        List<Point> points = new ArrayList<>();
 
 //        List<List<Double>> valuesList = partial;
-        if (partial.size() < minExecutions) minExecutions = partial.size();
+//        if (partial.size() < minExecutions) minExecutions = partial.size();
 
-        for (int i = 1; i < EXECUTIONS; i++) {
+        for (int i = 0; i < ITERATIONS; i++) {
             //count average
             double sum = 0.0;
 
             for (List<Double> values : partial) {
+//                System.out.println("Size"+values.size());
                 sum += values.get(i);
             }
 
-            double x = iterations * i / 100;
+            double x = ITERATIONS * i;// / 100;
             double y = sum / partial.size();
             points.add(new Point(x, y));
         }
@@ -170,19 +166,5 @@ public class GraphFitnessIterations {
 
     private static double round(double a) {
         return (double) Math.round(a * 100) / 100;
-    }
-
-    private static boolean meetsCriteria(SimulationResult result, int speciesId, int speciesCnt) {
-        try {
-            List<SwarmInfoEntity> collect = result.getSwarmInformations().stream()
-                    .filter(swarmInfoEntity -> swarmInfoEntity.getType() == speciesId)
-                    .collect(Collectors.toList());
-            int speciesNo = collect.isEmpty() ? 0 : collect.get(0).getNumberOfParticles();
-
-            return result.getTotalParticles() == NUMBER_OF_PARTICLES && speciesNo == speciesCnt;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 }

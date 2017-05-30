@@ -1,5 +1,8 @@
 package pl.edu.agh.mpso.utils;
 
+import net.sourceforge.jswarm_pso.FitnessFunction;
+import pl.edu.agh.mpso.fitness.Rastrigin;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
@@ -14,6 +17,9 @@ public class ExecutionParameters {
     public static final double PARTICLE_INCREMENT = 0.9;
     public static final double GLOBAL_INCREMENT = 0.9;
     public static final int EXECUTIONS = 30;
+    public static final int ITERATIONS = 100;
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd::HH:mm");
-    public static final String LABEL = "PSO::" + DATE_FORMAT.format(new Timestamp(System.currentTimeMillis()));
+    public static final String LABEL = "PSO_MODIFIED::" + DATE_FORMAT.format(new Timestamp(System.currentTimeMillis()));
+    public static final FitnessFunction FITNESS_FUNCTION = new Rastrigin();
+    public static final int DIMENSIONS = 2;
 }

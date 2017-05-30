@@ -1,27 +1,17 @@
 package pl.edu.agh.mpso;
 
-import static pl.edu.agh.mpso.Simulation.NUMBER_OF_DIMENSIONS;
-import static pl.edu.agh.mpso.Simulation.NUMBER_OF_ITERATIONS;
-import static pl.edu.agh.mpso.Simulation.NUMBER_OF_SKIPPED_ITERATIONS;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import net.sourceforge.jswarm_pso.Neighborhood;
-import net.sourceforge.jswarm_pso.Neighborhood1D;
-import pl.edu.agh.mpso.chart.Chart;
-import pl.edu.agh.mpso.chart.ChartCombiner;
-import pl.edu.agh.mpso.chart.Point;
-import pl.edu.agh.mpso.chart.ScatterChart;
-import pl.edu.agh.mpso.chart.SpeciesPieChart;
+import pl.edu.agh.mpso.chart.*;
 import pl.edu.agh.mpso.fitness.Rastrigin;
 import pl.edu.agh.mpso.species.SpeciesType;
 import pl.edu.agh.mpso.swarm.MultiSwarm;
 import pl.edu.agh.mpso.swarm.SwarmInformation;
 import pl.edu.agh.mpso.utils.SwarmUtils;
+
+import java.util.*;
+
+import static pl.edu.agh.mpso.Simulation.NUMBER_OF_SKIPPED_ITERATIONS;
+import static pl.edu.agh.mpso.utils.ExecutionParameters.DIMENSIONS;
+import static pl.edu.agh.mpso.utils.ExecutionParameters.ITERATIONS;
 
 //TODO DOESN'T WORK
 @SuppressWarnings("rawtypes")
@@ -42,7 +32,7 @@ public class Comparison {
             //run("Swarm 3", new int[] {5, 5, 0, 4, 2, 2, 2, 4});
         }
 
-        Chart chart = new ScatterChart().setTitle("PSO Ristrigin optimizing, " + NUMBER_OF_DIMENSIONS + " dimensions, " + NUMBER_OF_ITERATIONS + " iterations").
+        Chart chart = new ScatterChart().setTitle("PSO Ristrigin optimizing, " + DIMENSIONS + " dimensions, " + ITERATIONS + " iterations").
                 setXAxisTitle("Iterations").setYAxisTitle("Fitness").addSubTitle("" + EXECUTIONS + " executions");
 
         for (String swarmName : results.keySet()) {
@@ -113,7 +103,7 @@ public class Comparison {
 
         SwarmUtils.setMultiSwarmParameters(multiSwarm, multiSwarm.getNumberOfParticles()/5, 0.95, 100);
 
-        for (int i = 0; i < NUMBER_OF_ITERATIONS; ++i) {
+        for (int i = 0; i < ITERATIONS; ++i) {
             // Evolve swarm
             multiSwarm.evolve();
             if (i % 1000 == 0 && i > NUMBER_OF_SKIPPED_ITERATIONS) {
