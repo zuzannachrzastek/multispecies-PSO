@@ -6,6 +6,7 @@ import pl.edu.agh.mpso.chart.ScatterChart;
 import pl.edu.agh.mpso.dao.SimulationResultDAO;
 import pl.edu.agh.mpso.output.SimulationResult;
 import pl.edu.agh.mpso.species.SpeciesType;
+import pl.edu.agh.mpso.utils.ListTranspose;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -63,6 +64,7 @@ public class GraphFitnessIterations {
                         .setLogScale()
                         .setFileFormat("pdf");
 //        int minExecutions = Integer.MAX_VALUE;
+
         chart.addSeries(labelStandard, addData(resultsStandard));
         chart.addSeries(labelModified, addData(resultsModified));
 
@@ -121,6 +123,12 @@ public class GraphFitnessIterations {
 
 //        List<List<Double>> valuesList = partial;
 //        if (partial.size() < minExecutions) minExecutions = partial.size();
+        List<Double> tranposeList = new ArrayList<>();
+
+        List<List<Double>> transpose = ListTranspose.transpose(partial);
+        System.out.println(transpose.get(0).toString());
+        System.out.println(transpose.get(1).toString());
+
 
         for (int i = 0; i < ITERATIONS; i++) {
             //count average
