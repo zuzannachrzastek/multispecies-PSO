@@ -21,15 +21,18 @@ public class BoxAndWhiskers extends Chart<List<List<Double>>> {
 
     private Map<String, List<List<Double>>> data = new TreeMap<>();
 
-    private BoxAndWhiskerCategoryDataset createSampleDataset(List<List<Double>> table) {
-        int i = 0;
+    private BoxAndWhiskerCategoryDataset createSampleDataset() {
 
         final DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
 
-        for(List<Double> list : table){
-            dataset.add(list, "Series " + (i++), " Type ");
+        for (String key : data.keySet()) {
+            System.out.println("KEY" + key);
+            int i = 0;
+            for (List<Double> list : data.get(key)) {
+                dataset.add(list, key, "Series " + (i++));
+            }
+
         }
-        
         return dataset;
 
     }
@@ -43,11 +46,10 @@ public class BoxAndWhiskers extends Chart<List<List<Double>>> {
 
     @Override
     protected void save(File file) throws IOException {
-        final BoxAndWhiskerCategoryDataset dataset = createSampleDataset(data.get(data.keySet().iterator().next()));
+        final BoxAndWhiskerCategoryDataset dataset = createSampleDataset();
 
-        JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(title, xTitle, yTitle, dataset, false);
+        JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(title, xTitle, yTitle, dataset, true);
         chart.getPlot().setBackgroundPaint(Color.WHITE);
-
 
         ChartSaveUtilities.saveChart(file, chart, size[0], size[1]);
     }

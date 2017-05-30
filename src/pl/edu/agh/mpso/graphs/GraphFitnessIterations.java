@@ -28,6 +28,7 @@ public class GraphFitnessIterations {
     private static final String PACKAGE = "pl.edu.agh.mpso.fitness";
     private final static String labelStandard = "PSO_STANDARD::2017.05.26::15:48";
     private final static String labelModified = "PSO_MODIFIED::2017.05.26::15:50";
+    private static BoxAndWhiskers boxwhiskersChart = new BoxAndWhiskers();
 
 //    private final static int[] counts = new int[]{0, 4, 11, 18, 25};
 
@@ -66,13 +67,15 @@ public class GraphFitnessIterations {
                         .setFileFormat("pdf");
 //        int minExecutions = Integer.MAX_VALUE;
 
-        chart.addSeries(labelStandard, addData(resultsStandard));
-        chart.addSeries(labelModified, addData(resultsModified));
+        chart.addSeries(labelStandard, addData(resultsStandard, labelStandard));
+        chart.addSeries(labelModified, addData(resultsModified, labelModified));
 
 //        String path = "thesis2/share/" + fitnessFunction;
 //        String suffix = "" + speciesId + "_" + totalParticles + "_" + dimensions + "_" + iterations + "_" + minExecutions;
 
         chart.save("results/" + speciesId + ".pdf");
+        boxwhiskersChart.save("results/whatever" + ".pdf");
+
 
 
         System.out.println("Preparing csv results");
@@ -113,7 +116,7 @@ public class GraphFitnessIterations {
 //        avgWriter.close();
     }
 
-    private static List<Point> addData(List<SimulationResult> results) {
+    private static List<Point> addData(List<SimulationResult> results, String serie) {
         List<List<Double>> partial = results.stream().map(SimulationResult::getPartial).collect(Collectors.toList());
 
 
@@ -127,12 +130,8 @@ public class GraphFitnessIterations {
         List<Double> tranposeList = new ArrayList<>();
 
         List<List<Double>> transpose = ListTranspose.transpose(partial);
-        System.out.println(transpose.get(0).toString());
-        System.out.println(transpose.get(1).toString());
 
-        BoxAndWhiskers boxwhiskersChart = new BoxAndWhiskers();
-        boxwhiskersChart.addSeries(labelModified, transpose);
-        boxwhiskersChart.save("results/whatever" + ".pdf");
+        boxwhiskersChart.addSeries(serie, transpose);
 
         for (int i = 0; i < ITERATIONS; i++) {
             //count average
