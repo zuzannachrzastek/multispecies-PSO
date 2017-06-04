@@ -7,6 +7,7 @@ import pl.edu.agh.mpso.chart.ScatterChart;
 import pl.edu.agh.mpso.dao.SimulationResultDAO;
 import pl.edu.agh.mpso.output.SimulationResult;
 import pl.edu.agh.mpso.species.SpeciesType;
+import pl.edu.agh.mpso.utils.ExecutionParameters;
 import pl.edu.agh.mpso.utils.ListTranspose;
 
 import java.io.File;
@@ -26,8 +27,8 @@ import static pl.edu.agh.mpso.utils.ExecutionParameters.ITERATIONS;
  */
 public class GraphFitnessIterations {
     private static final String PACKAGE = "pl.edu.agh.mpso.fitness";
-    private final static String labelStandard = "PSO_STANDARD::2017.05.26::15:48";
-    private final static String labelModified = "PSO_MODIFIED::2017.05.26::15:50";
+    private final static String labelStandard = "PSO_STANDARD::2017.06.04::11:22";
+    private final static String labelModified = "PSO_MODIFIED::2017.06.04::11:22";
     private static BoxAndWhiskers boxwhiskersChart = new BoxAndWhiskers();
 
 //    private final static int[] counts = new int[]{0, 4, 11, 18, 25};
@@ -73,19 +74,19 @@ public class GraphFitnessIterations {
 //        String path = "thesis2/share/" + fitnessFunction;
 //        String suffix = "" + speciesId + "_" + totalParticles + "_" + dimensions + "_" + iterations + "_" + minExecutions;
 
-        chart.save("results/" + speciesId + ".pdf");
-        boxwhiskersChart.save("results/whatever" + ".pdf");
+        chart.save("results/" + ExecutionParameters.FITNESS_FUNCTION.getClass().getSimpleName().toString() + "_" + ExecutionParameters.DIMENSIONS + "_mean.pdf");
+        boxwhiskersChart.save("results/" + ExecutionParameters.FITNESS_FUNCTION.getClass().getSimpleName().toString()+ "_" + ExecutionParameters.DIMENSIONS + "_boxandwhisker.pdf");
 
 
 
-        System.out.println("Preparing csv results");
-        File avgCsvFile = new File("results/" + "/average.csv");
-        File stdCsvFile = new File("results/" + "/deviation.csv");
-        PrintWriter avgWriter = new PrintWriter(new FileOutputStream(avgCsvFile, true));
-        PrintWriter stdWriter = new PrintWriter(new FileOutputStream(stdCsvFile, true));
+//        System.out.println("Preparing csv results");
+//        File avgCsvFile = new File("results/" + "/average.csv");
+//        File stdCsvFile = new File("results/" + "/deviation.csv");
+//        PrintWriter avgWriter = new PrintWriter(new FileOutputStream(avgCsvFile, true));
+//        PrintWriter stdWriter = new PrintWriter(new FileOutputStream(stdCsvFile, true));
 //		writer.append("Count,Average Quality,Standard Deviation\n");
 
-        avgWriter.append(SpeciesType.values()[speciesId].toString() + ",");
+//        avgWriter.append(SpeciesType.values()[speciesId].toString() + ",");
 
         //TODO average and standard deviation
         //http://www.java2s.com/Code/Java/Chart/JFreeChartBoxAndWhiskerDemo.htm

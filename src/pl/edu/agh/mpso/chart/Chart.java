@@ -11,6 +11,7 @@ import org.jfree.chart.title.Title;
 public abstract class Chart<T> {
 	protected String title, xTitle, yTitle;
 	protected int [] size = new int [] {510, 480};
+	protected int [] sizeBoxandWhisker = new int [] {1700, 600};
 	protected List<Title> subtitles;
 	protected boolean standardDeviation = false;
 	protected boolean logScale;

@@ -26,12 +26,11 @@ public class BoxAndWhiskers extends Chart<List<List<Double>>> {
         final DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
 
         for (String key : data.keySet()) {
-            System.out.println("KEY" + key);
+            System.out.println("KEY " + key);
             int i = 0;
             for (List<Double> list : data.get(key)) {
                 dataset.add(list, key, "Series " + (i++));
             }
-
         }
         return dataset;
 
@@ -51,6 +50,6 @@ public class BoxAndWhiskers extends Chart<List<List<Double>>> {
         JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(title, xTitle, yTitle, dataset, true);
         chart.getPlot().setBackgroundPaint(Color.WHITE);
 
-        ChartSaveUtilities.saveChart(file, chart, size[0], size[1]);
+        ChartSaveUtilities.saveChart(file, chart, sizeBoxandWhisker[0], sizeBoxandWhisker[1]);
     }
 }
