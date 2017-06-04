@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static pl.edu.agh.mpso.utils.ExecutionParameters.*;
 import static pl.edu.agh.mpso.utils.ExecutionParameters.ITERATIONS;
 
 /**
@@ -27,8 +28,8 @@ import static pl.edu.agh.mpso.utils.ExecutionParameters.ITERATIONS;
  */
 public class GraphFitnessIterations {
     private static final String PACKAGE = "pl.edu.agh.mpso.fitness";
-    private final static String labelStandard = "PSO_STANDARD::2017.06.04::11:22";
-    private final static String labelModified = "PSO_MODIFIED::2017.06.04::11:22";
+    private final static String labelStandard = "PSO_STANDARD::2017.06.04::12:36";
+    private final static String labelModified = "PSO_MODIFIED::2017.06.04::12:36";
     private static BoxAndWhiskers boxwhiskersChart = new BoxAndWhiskers();
 
 //    private final static int[] counts = new int[]{0, 4, 11, 18, 25};
@@ -74,8 +75,8 @@ public class GraphFitnessIterations {
 //        String path = "thesis2/share/" + fitnessFunction;
 //        String suffix = "" + speciesId + "_" + totalParticles + "_" + dimensions + "_" + iterations + "_" + minExecutions;
 
-        chart.save("results/" + ExecutionParameters.FITNESS_FUNCTION.getClass().getSimpleName().toString() + "_" + ExecutionParameters.DIMENSIONS + "_mean.pdf");
-        boxwhiskersChart.save("results/" + ExecutionParameters.FITNESS_FUNCTION.getClass().getSimpleName().toString()+ "_" + ExecutionParameters.DIMENSIONS + "_boxandwhisker.pdf");
+        chart.save("results/" + FITNESS_FUNCTION.getClass().getSimpleName() + "_" + DIMENSIONS + "_mean.pdf");
+        boxwhiskersChart.save("results/" + FITNESS_FUNCTION.getClass().getSimpleName() + "_" + DIMENSIONS + "_boxandwhisker.pdf");
 
 
 
@@ -131,7 +132,6 @@ public class GraphFitnessIterations {
         List<Double> tranposeList = new ArrayList<>();
 
         List<List<Double>> transpose = ListTranspose.transpose(partial);
-
         boxwhiskersChart.addSeries(serie, transpose);
 
         for (int i = 0; i < ITERATIONS; i++) {

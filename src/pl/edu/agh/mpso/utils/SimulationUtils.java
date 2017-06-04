@@ -20,13 +20,13 @@ import static pl.edu.agh.mpso.utils.ExecutionParameters.*;
 public class SimulationUtils {
 
     public static void simulate(FitnessFunction fitnessFunction,
-                         List<SwarmInformation> speciesArray, int id, int executions, int i) throws IOException {
+                                List<SwarmInformation> speciesArray, int id, int executions, int i, String label) throws IOException {
         SimulationOutput output = null;
         try {
             long tic = System.currentTimeMillis();
 
             MultiSwarm multiSwarm = new MultiSwarm(speciesArray, fitnessFunction);
-            SimulationResult result = RunUtils.run(multiSwarm, speciesArray, fitnessFunction, INERTIA, SEARCH_SPACE_SIZE, NEIGHBOURHOOD_SIZE);
+            SimulationResult result = RunUtils.run(multiSwarm, speciesArray, fitnessFunction, INERTIA, SEARCH_SPACE_SIZE, NEIGHBOURHOOD_SIZE, label);
 
             long toc = System.currentTimeMillis();
             long diff = toc - tic;
@@ -59,7 +59,7 @@ public class SimulationUtils {
         multiSwarm.setAbsMaxVelocity(maxVelocity);
         multiSwarm.init();
 
-        for(int i = 0; i < ExecutionParameters.ITERATIONS; ++i) {
+        for(int i = 0; i < ITERATIONS; ++i) {
             // Evolve swarm
             multiSwarm.evolve();
         }

@@ -19,11 +19,11 @@ import static pl.edu.agh.mpso.utils.ExecutionParameters.*;
  */
 public abstract class RunUtils {
 
-    public static void runParallel(final int id, final FitnessFunction fitnessFunction, final List<SwarmInformation> speciesArray, final int executions) throws InterruptedException {
+    public static void runParallel(final int id, final FitnessFunction fitnessFunction, final List<SwarmInformation> speciesArray, final int executions, String label) throws InterruptedException {
         Thread thread = new Thread(() -> {
             for (int i = 0; i < executions; i++) {
                 try {
-                    SimulationUtils.simulate(fitnessFunction, speciesArray, id, ITERATIONS, i);
+                    SimulationUtils.simulate(fitnessFunction, speciesArray, id, ITERATIONS, i, label);
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
@@ -35,7 +35,7 @@ public abstract class RunUtils {
     }
 
     public static void runParallel(final int id, final FitnessFunction fitnessFunction, final int executions,
-                                   final int[] speciesShares, final int speciesId, int number_of_particles) throws InterruptedException {
+                                   final int[] speciesShares, final int speciesId, int number_of_particles, String label) throws InterruptedException {
         Thread thread = new Thread(() -> {
             for (int share : speciesShares) {
                 System.out.println("Species " + speciesId + " share " + share);
@@ -54,7 +54,7 @@ public abstract class RunUtils {
 
                 for (int i = 0; i < executions; i++) {
                     try {
-                        SimulationUtils.simulate(fitnessFunction, speciesArray, id, executions, i);
+                        SimulationUtils.simulate(fitnessFunction, speciesArray, id, executions, i, label);
                     } catch (Throwable e) {
                         e.printStackTrace();
                     }
@@ -143,7 +143,7 @@ public abstract class RunUtils {
     }
 
 
-    public static SimulationResult run(MultiSwarm multiSwarm, List<SwarmInformation> particles, FitnessFunction fitnessFunction, double inertia, int searchSpaceSize, int neighbourhoodSize) {
+    public static SimulationResult run(MultiSwarm multiSwarm, List<SwarmInformation> particles, FitnessFunction fitnessFunction, double inertia, int searchSpaceSize, int neighbourhoodSize, String label) {
 
         SwarmUtils.setMultiSwarmParameters(multiSwarm, neighbourhoodSize, inertia, searchSpaceSize);
 
@@ -160,7 +160,7 @@ public abstract class RunUtils {
         //create output.json
         SimulationResult.SimulationResultBuilder builder = new SimulationResult.SimulationResultBuilder();
         SimulationResult result = builder.setFitnessFunction(fitnessFunction.getClass().getName())
-                .setLabel(LABEL)
+                .setLabel(label)
                 .setIterations(ITERATIONS)
                 .setDimensions(DIMENSIONS)
                 .setPartial(partial)

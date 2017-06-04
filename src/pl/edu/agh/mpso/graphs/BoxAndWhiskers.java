@@ -26,7 +26,6 @@ public class BoxAndWhiskers extends Chart<List<List<Double>>> {
         final DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
 
         for (String key : data.keySet()) {
-            System.out.println("KEY " + key);
             int i = 0;
             for (List<Double> list : data.get(key)) {
                 dataset.add(list, key, "Series " + (i++));
